@@ -4,7 +4,7 @@ public abstract class User {
     protected String firstName;
     protected String lastName;
 
-    private int nextEmployeeId = 1;;
+    private static int nextEmployeeId = 1;
     private final int employeeId;
     
     
@@ -42,6 +42,19 @@ public abstract class User {
         this.password = password;
     }
 
+    public void changePassword(String currentPassword, String newPassword){
+        if (!currentPassword.equals(getPassword())) {
+            throw new IllegalArgumentException("Incorrect current password!!!");
+            
+        }
+        if (!passwordCheck(newPassword)) {
+            throw new IllegalArgumentException("Invalid password : Must contain at least one uppercase letter, lowercase letter and a number");
+        } 
+        setPassword(newPassword);
+        System.out.println("Password changed successfully.");
+
+    }
+
     //password validity check
     public boolean passwordCheck(String password){
         if (!(password!= null && password.length() > 8 ))
@@ -67,12 +80,13 @@ public abstract class User {
         setLastName(lastName);
 
         this.userName = getLastName().toLowerCase()+getEmployeeId();
-        this.password = password;
+        setPassword(password);
      }
      public String toString(){
-        String tag = "Name : "+getFirstName()+" "+getLastName();
+        String tag = "\nName : "+getFirstName()+" "+getLastName();
         tag += "\nEmployee ID : "+getEmployeeId();
         tag += "\nUserName : "+getUserName();
+        tag += "\nPassword : "+getPassword();
         return tag;
 
 

@@ -16,7 +16,16 @@ public class SalesSystem {
     public static void main(String[] args) {
         Admin a1 = new Admin("Kalana", "Dasanayaka", "Maekar2295!@#");
         System.out.println(a1);
-        a1.displayRole();
+        
+
+        Clerk c1 = new Clerk("john", "java", "Maekar2295!@#");
+        System.out.println(c1);
+        
+        a1.overridePassword(c1,"John@2295");
+        System.out.println(c1);
+        
+        
+        
     }
     
 }
