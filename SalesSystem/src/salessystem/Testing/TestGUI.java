@@ -4,6 +4,8 @@ import java.awt.Button;
 import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -12,9 +14,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import salessystem.Admin;
+import salessystem.User;
 
 
 public class TestGUI  {
+    
+    public static List<User> users = new ArrayList<>();
+    
     public TestGUI(){
         JLabel label1= new JLabel("Create new Admin");
         JLabel label2= new JLabel("Nuh uh button");
@@ -51,6 +57,7 @@ public class TestGUI  {
     }
     public void createNewAdmin(){
         Admin a1 = new Admin("Kalana", "Dasanayaka", "Maekar2295!@#");
+        users.add(a1);
         System.out.println(a1);
     }
     public void nuhUh(){
@@ -59,6 +66,7 @@ public class TestGUI  {
     
     public static void main(String[] args) {
         new TestGUI();
+        new TestLogin();
     }
 
 }
