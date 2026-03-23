@@ -32,26 +32,35 @@ public abstract class User {
 
     //setters
     
-    public void setFirstName(String firstName) {
+    public final void setFirstName(String firstName) throws IllegalArgumentException{
+        if(firstName == null || firstName.trim().isEmpty()){
+            throw new IllegalArgumentException("First name cannot be empty");
+        }
         this.firstName = firstName;
     }
-    public void setLastName(String lastName) {
+    
+    public final void setLastName(String lastName) throws IllegalArgumentException{
+        if(lastName == null || lastName.trim().isEmpty()){
+            throw new IllegalArgumentException("Last name cannot be empty");
+        }
         this.lastName = lastName;
     }
-    public void setPassword(String password) {
+    public final void setPassword(String password) throws IllegalArgumentException{
+        if (!passwordCheck(password)) {
+            throw new IllegalArgumentException("Invalid password : Must contain at least one uppercase letter, lowercase letter and a number");
+        } 
         this.password = password;
     }
 
-    public void changePassword(String currentPassword, String newPassword){
+    public final void changePassword(String currentPassword, String newPassword) { 
         if (!currentPassword.equals(getPassword())) {
-            throw new IllegalArgumentException("Incorrect current password!!!");
+            System.out.println("Incorrect current password!!!");
             
-        }
-        if (!passwordCheck(newPassword)) {
-            throw new IllegalArgumentException("Invalid password : Must contain at least one uppercase letter, lowercase letter and a number");
-        } 
+            
+    }
+        else{
         setPassword(newPassword);
-        System.out.println("Password changed successfully.");
+        System.out.println("Password changed successfully.");}
 
     }
 
@@ -71,9 +80,7 @@ public abstract class User {
 
     public User(String firstName, String lastName, String password){
 
-        if (!passwordCheck(password)) {
-            throw new IllegalArgumentException("Invalid password : Must contain at least one uppercase letter, lowercase letter and a number");
-        } 
+        
         this.employeeId = nextEmployeeId++;
         
         setFirstName(firstName);

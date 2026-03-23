@@ -1,0 +1,16 @@
+package salessystem.Testing;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import salessystem.Admin;
+
+public class TestNewAdmin implements ActionListener{
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Admin a1 = new Admin("Kalana", "Dasanayaka", "Maekar2295!@#");
+        System.out.println(a1);
+    }
+
+}
