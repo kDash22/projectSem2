@@ -3,6 +3,7 @@ package salessystem;
 public class Admin extends User {
     //override password of user 
     public Admin(String firstName, String lastName, String password){
+
         super(firstName, lastName, password);
     }
 
@@ -10,8 +11,9 @@ public class Admin extends User {
     void displayRole() {
         System.out.println("Authority level : Admin");
     }
+
     public void overridePassword(Clerk user,String password){
-        if (!passwordCheck(password)) {
+        if (!validatePassword(password)) {
             throw new IllegalArgumentException("Invalid password : Must contain at least one uppercase letter, lowercase letter and a number!");
         } 
         user.setPassword(password);

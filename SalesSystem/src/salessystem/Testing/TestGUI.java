@@ -46,7 +46,7 @@ public class TestGUI  {
 
         JFrame frame = new JFrame(); //window
         frame.add(panel, BorderLayout.CENTER);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.setTitle("TestGUI");
         frame.pack();
         frame.setVisible(true);
@@ -59,6 +59,7 @@ public class TestGUI  {
         Admin a1 = new Admin("Kalana", "Dasanayaka", "Maekar2295!@#");
         users.add(a1);
         System.out.println(a1);
+        new TestLogin();
     }
     public void nuhUh(){
         System.out.println("NUH UH!");
@@ -66,7 +67,7 @@ public class TestGUI  {
     
     public static void main(String[] args) {
         new TestGUI();
-        new TestLogin();
+        
     }
 
 }
