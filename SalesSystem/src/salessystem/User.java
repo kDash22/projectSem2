@@ -33,20 +33,16 @@ public abstract class User {
     //setters
     
     public final void setFirstName(String firstName) throws IllegalArgumentException{
-        if(firstName == null || firstName.trim().isEmpty()){
-            throw new IllegalArgumentException("First name cannot be empty");
-        }
+        validateFirstName(firstName);
         this.firstName = firstName;
     }
     
     public final void setLastName(String lastName) throws IllegalArgumentException{
-        if(lastName == null || lastName.trim().isEmpty()){
-            throw new IllegalArgumentException("Last name cannot be empty");
-        }
+        validateLastName(lastName);
         this.lastName = lastName;
     }
     public final void setPassword(String password) throws IllegalArgumentException{
-        if (!passwordCheck(password)) {
+        if (!validatePassword(password)) {
             throw new IllegalArgumentException("Invalid password : Must contain at least one uppercase letter, lowercase letter and a number");
         } 
         this.password = password;
@@ -55,48 +51,57 @@ public abstract class User {
     public final void changePassword(String currentPassword, String newPassword) { 
         if (!currentPassword.equals(getPassword())) {
             System.out.println("Incorrect current password!!!");
-            
-            
-    }
+        }
         else{
-        setPassword(newPassword);
-        System.out.println("Password changed successfully.");}
+            setPassword(newPassword);
+            System.out.println("Password changed successfully.");}
 
     }
-
-    //password validity check
-    public boolean passwordCheck(String password){
-        if (!(password!= null && password.length() > 8 ))
-            {
-             return false;   
-            }
-            
-        boolean hasUpper = password.matches(".*[A-Z].*");
-        boolean hasLower = password.matches(".*[a-z].*");
-        boolean hasNumber = password.matches(".*[0-9].*");
-        return hasUpper && hasLower && hasNumber ; 
-    }
-    
 
     public User(String firstName, String lastName, String password){
 
-        
-        this.employeeId = nextEmployeeId++;
-        
         setFirstName(firstName);
         setLastName(lastName);
-
-        this.userName = getLastName().toLowerCase()+getEmployeeId();
         setPassword(password);
-     }
-     public String toString(){
+        this.employeeId = nextEmployeeId++;
+        this.userName = getLastName().toLowerCase()+getEmployeeId();
+    }
+
+    @Override
+    public String toString(){
         String tag = "\nName : "+getFirstName()+" "+getLastName();
         tag += "\nEmployee ID : "+getEmployeeId();
         tag += "\nUserName : "+getUserName();
         tag += "\nPassword : "+getPassword();
         return tag;
+    }
 
-
+     //validation
+     public void validateFirstName(String firstName){
+         if(firstName == null || firstName.trim().isEmpty()){
+             throw new IllegalArgumentException("First name cannot be empty");
+         }
      }
+
+     public void validateLastName(String lastName){
+         if(lastName == null || lastName.trim().isEmpty()){
+             throw new IllegalArgumentException("Last name cannot be empty");
+         }
+     }
+
+    public boolean validatePassword(String password){
+        if (!(password!= null && password.length() > 8 ))
+        {
+            return false;
+        }
+
+        boolean hasUpper = password.matches(".*[A-Z].*");
+        boolean hasLower = password.matches(".*[a-z].*");
+        boolean hasNumber = password.matches(".*[0-9].*");
+        return hasUpper && hasLower && hasNumber ;
+    }
+
+
+
 }
 

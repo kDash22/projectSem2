@@ -23,9 +23,21 @@ public class SalesSystem {
         
         a1.overridePassword(c1,"John@2295");
         System.out.println(c1);
-        
-        
-        
+
+        Customer cus = new Customer("200433504456", "Kalana Dasanyaka", "0725091436");
+        System.out.println(cus);
+
+        Product prod1 = new Product( "Rice packet", UnitType.PIECE, 200, 10. );
+        System.out.println(prod1);
+
+        Product prod2 = new Product("Sugar ", UnitType.WEIGHT, 150, 25.5);
+        System.out.println(prod2);
+
+        SaleItem item1 = new SaleItem(prod1, 10);
+        System.out.println(item1);
+
+        SaleItem item2 = new SaleItem(prod2, 10);
+        System.out.println(item2);
     }
     
 }

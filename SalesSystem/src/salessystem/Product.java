@@ -1,60 +1,101 @@
 package salessystem;
 
 public class Product {
-    private int productId;
-    private static int nextProductId=1;
+    private final int productId;
+    private static int nextProductId = 1;
 
     private String productName;
     private double price;
-    private int quantity;
+    private double stock;
+    private UnitType unitType;
 
-    public Product(String productName, double price, int quantity){
-        productId = nextProductId++;
+    public Product(String productName, UnitType unitType, double price, double stock) {
+
         setProductName(productName);
+        setUnitType(unitType);
         setPrice(price);
-        setQuantity(quantity);
+        setStock(stock);
+        productId = nextProductId++;
     }
 
-    public String toString(){
-        String msg ="\nProduct ID : "+getProductId();
-        msg += "\nProduct Name : "+getProductName();
-        msg += "\nPrice : "+getPrice();
-        msg += "\nQuantity : "+getQuantity();
+    public String toString() {
+        String msg = "\nProduct ID : " + getProductId();
+        msg += "\nProduct Name : " + getProductName();
+        msg += "\nPrice : " + getPrice();
+        if (getUnitType() == UnitType.WEIGHT) {
+            msg += "\nStock Amount (kg) : " + getStock();
+        }
+        if (getUnitType() == UnitType.PIECE) {
+            msg += "\nStock Amount (units) : " + getStock();
+        }
+
         return msg;
     }
 
     //setters
-    public void setProductName(String productName){
-        if (productName == null || productName.trim().isEmpty()) {
-            throw new IllegalArgumentException("Product name cannot be empty!");
-        }
+    public void setProductName(String productName) {
+        validateProductName(productName);
         this.productName = productName;
     }
-    public void setPrice(double price) throws IllegalArgumentException{
-        if (price<=0) {
-            throw new IllegalArgumentException("Price cannot be negative or zero!");
-        }
-        this.price=price;
+
+    public void setUnitType(UnitType unitType) {
+        validateUnitType(unitType);
+        this.unitType = unitType;
     }
-    public void setQuantity(int quantity) throws IllegalArgumentException{
-        if (quantity<0) {
-            throw new IllegalArgumentException("Quantity cannot be negative!");
-        }
-        this.quantity=quantity;
+
+    public void setPrice(double price) throws IllegalArgumentException {
+        validatePrice(price);
+        this.price = price;
+    }
+
+    public void setStock(double stock) throws IllegalArgumentException {
+        validateStock(stock);
+        this.stock = stock;
     }
 
     //getters
-    public int getProductId(){
+    public int getProductId() {
         return productId;
     }
-    public String getProductName(){
+
+    public String getProductName() {
         return productName;
     }
-    public double getPrice(){
+
+    public double getPrice() {
         return price;
     }
-    public int getQuantity(){
-        return quantity;
+
+    public double getStock() {
+        return stock;
     }
 
+    public UnitType getUnitType() {
+        return unitType;
+    }
+
+    //validations
+    public void validateProductName(String productName) {
+        if (productName == null || productName.trim().isEmpty())
+            throw new IllegalArgumentException("Product name cannot be empty!");
+    }
+
+    public void validateUnitType(UnitType unitType) {
+        if (unitType == null)
+            throw new IllegalArgumentException("Unit type cannot be null!");
+    }
+
+
+    public void validatePrice(double price) {
+        if (price <= 0)
+            throw new IllegalArgumentException("Price must be greater than zero!");
+    }
+
+    public void validateStock(double stock) {
+        if (stock < 0)
+            throw new IllegalArgumentException("Stock cannot be negative!");
+
+        if (unitType == UnitType.PIECE && stock % 1 != 0)
+            throw new IllegalArgumentException("Stock must be whole number for PIECE type products");
+    }
 }

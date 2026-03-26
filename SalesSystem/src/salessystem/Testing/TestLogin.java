@@ -51,6 +51,7 @@ public class TestLogin {
         panel.add(loginMsg);
 
         JFrame frame = new JFrame();
+        frame.setTitle("Login here.");
         frame.setSize(500, 500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
