@@ -1,9 +1,6 @@
-package salessystem.Testing;
+package salessystem.testing;
 import java.awt.BorderLayout;
-import java.awt.Button;
-import java.awt.Frame;
 import java.awt.GridLayout;
-import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +10,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import salessystem.Admin;
-import salessystem.User;
+import salessystem.model.Admin;
+import salessystem.model.UnitType;
+import salessystem.model.User;
 
 
 public class TestGUI  {
@@ -56,7 +54,7 @@ public class TestGUI  {
 
     }
     public void createNewAdmin(){
-        Admin a1 = new Admin("Kalana", "Dasanayaka", "Maekar2295!@#");
+        Admin a1 = new Admin(1,"Kalana", "Dasanayaka", "Maekar2295!@#");
         users.add(a1);
         System.out.println(a1);
         new TestLogin();
@@ -67,7 +65,7 @@ public class TestGUI  {
     
     public static void main(String[] args) {
         new TestGUI();
-        
+        System.out.println(UnitType.PIECE.name());
     }
 
 }

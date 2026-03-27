@@ -4,6 +4,8 @@
  */
 package salessystem;
 
+import salessystem.model.*;
+
 /**
  *
  * @author Kalana Dasanayaka
@@ -14,11 +16,11 @@ public class SalesSystem {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Admin a1 = new Admin("Kalana", "Dasanayaka", "Maekar2295!@#");
+        Admin a1 = new Admin(1,"Kalana", "Dasanayaka", "Maekar2295!@#");
         System.out.println(a1);
         
 
-        Clerk c1 = new Clerk("john", "java", "Maekar2295!@#");
+        Clerk c1 = new Clerk(2,"john", "java", "Maekar2295!@#");
         System.out.println(c1);
         
         a1.overridePassword(c1,"John@2295");
@@ -38,6 +40,17 @@ public class SalesSystem {
 
         SaleItem item2 = new SaleItem(prod2, 10);
         System.out.println(item2);
+
+        Sale sale1 = new Sale(cus);
+        System.out.println(sale1);
+
+        sale1.addSaleItem(item1);
+        sale1.addSaleItem(item2);
+
+        System.out.println();
+        System.out.println(sale1);
+
+
     }
     
 }

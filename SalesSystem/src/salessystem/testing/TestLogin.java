@@ -1,4 +1,4 @@
-package salessystem.Testing;
+package salessystem.testing;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import salessystem.*;
+import salessystem.model.User;
 
 public class TestLogin {
     

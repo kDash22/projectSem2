@@ -1,21 +1,27 @@
-package salessystem;
+package salessystem.model;
 
 public class Product {
-    private final int productId;
-    private static int nextProductId = 1;
-
+    private int productId;
     private String productName;
     private double price;
     private double stock;
     private UnitType unitType;
 
+    //for new product, id not set yet
     public Product(String productName, UnitType unitType, double price, double stock) {
 
         setProductName(productName);
         setUnitType(unitType);
         setPrice(price);
         setStock(stock);
-        productId = nextProductId++;
+
+    }
+
+    //for existing product, id has already been set by the database, only used for retrieval
+    public Product(int productID,String productName, UnitType unitType, double price, double stock){
+
+        this(productName,unitType,price,stock);
+        this.productId = productID;
     }
 
     public String toString() {
@@ -33,6 +39,12 @@ public class Product {
     }
 
     //setters
+    public void setProductId(int productId){
+        if (this.productId != 0) { // it gets set by the database as productID is the primary key and is set to auto increment
+            throw new IllegalStateException("ID already set");
+        }
+        this.productId = productId;
+    }
     public void setProductName(String productName) {
         validateProductName(productName);
         this.productName = productName;
