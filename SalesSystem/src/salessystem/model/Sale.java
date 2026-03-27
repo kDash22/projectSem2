@@ -1,4 +1,6 @@
-package salessystem;
+package salessystem.model;
+
+import salessystem.GlobalMethods;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -57,7 +59,7 @@ public class Sale {
         String msg = "\nSale ID : "+getSaleID();
         msg += "\nCustomer NIC : "+getCustomer().getNic();
         msg += "\nCustomer Name : "+getCustomer().getName();
-        msg += "\nTime : "+getDate();
+        msg += "\nTime : "+ GlobalMethods.dateTimeFormat(getDate());
         msg += "\nSale items : "+getSaleItems();
         msg += "\nTotal : "+calculateTotal();
         return msg;

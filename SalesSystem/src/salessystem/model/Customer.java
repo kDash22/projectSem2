@@ -1,4 +1,4 @@
-package salessystem;
+package salessystem.model;
 
 public class Customer {
     private String nic ;

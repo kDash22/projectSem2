@@ -1,4 +1,4 @@
-package salessystem;
+package salessystem.model;
 
 public class SaleItem {
 

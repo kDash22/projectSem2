@@ -1,10 +1,10 @@
-package salessystem;
+package salessystem.model;
 
 public abstract class User {
     protected String firstName;
     protected String lastName;
 
-    private static int nextEmployeeId = 1;
+
     private final int employeeId;
     
     
@@ -29,6 +29,7 @@ public abstract class User {
     public String getUserName() {
         return userName;
     }
+    public abstract String getRole();
 
     //setters
     
@@ -58,12 +59,12 @@ public abstract class User {
 
     }
 
-    public User(String firstName, String lastName, String password){
+    public User(int employeeId,String firstName, String lastName, String password){
 
         setFirstName(firstName);
         setLastName(lastName);
         setPassword(password);
-        this.employeeId = nextEmployeeId++;
+        this.employeeId = employeeId;
         this.userName = getLastName().toLowerCase()+getEmployeeId();
     }
 

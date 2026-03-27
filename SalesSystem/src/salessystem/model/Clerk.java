@@ -1,4 +1,4 @@
-package salessystem;
+package salessystem.model;
 
 public class Clerk extends User{
     //display items table
@@ -6,13 +6,18 @@ public class Clerk extends User{
     //update quantity
 
 
-    public Clerk(String fName, String lName, String password ){
-        super(fName,lName,password);
+    public Clerk(int employeeID,String fName, String lName, String password ){
+        super(employeeID,fName,lName,password);
     }
 
     @Override
     void displayRole() {
         System.out.println("Authority level : Clerk");
+    }
+
+    @Override
+    public String getRole() {
+        return "Clerk";
     }
 
     @Override

@@ -1,4 +1,4 @@
-package salessystem.Testing;
+package salessystem.testing;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
