@@ -99,10 +99,72 @@ public class ProductDAO {
         }
     }
 
+    public boolean updateProduct( int productId, Product product){
+
+        String sql = "UPDATE product SET product_name = ?, price = ?, stock = ? WHERE customer_id = ?";
+
+        try(Connection con = DBConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(sql)){
+
+            ps.setString(1,product.getProductName());
+            ps.setDouble(2,product.getPrice());
+            ps.setDouble(4, product.getStock());
+            ps.setInt(4, productId);
+
+            int rows = ps.executeUpdate();
+            return rows > 0;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(" Error while updating product ! ",e);
+        }
+    }
+
+    public boolean updateProductStock( int productId, Product product){
+
+        String sql = "UPDATE product SET stock = ? WHERE customer_id = ?";
+
+
+        try(Connection con = DBConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(sql)){
+
+
+            ps.setDouble(1, product.getStock());
+            ps.setInt(2, productId);
+
+            int rows = ps.executeUpdate();
+            return rows > 0;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(" Error while updating stock of product ! ",e);
+        }
+    }
+
+    public boolean updateProductPrice( int productId, Product product){
+
+        String sql = "UPDATE product SET price = ? WHERE customer_id = ?";
+
+
+        try(Connection con = DBConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(sql)){
+
+
+            ps.setDouble(1, product.getPrice());
+            ps.setInt(2, productId);
+
+            int rows = ps.executeUpdate();
+            return rows > 0;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(" Error while updating price of product ! ",e);
+        }
+    }
+
+
+
     public static void main(String[] args) {
         Product p1 = new Product("Rice packet 1kg", UnitType.PIECE, 200, 50);
         Product p2 = new Product("Sugar", UnitType.WEIGHT, 150, 70.5);
-        Product p3 = new Product("ciggerette packets", UnitType.PIECE, 3500, 50);
+        Product p3 = new Product("cigarette packets", UnitType.PIECE, 3500, 50);
         System.out.println(p3);
         ProductDAO pdao = new ProductDAO();
 

@@ -1,7 +1,7 @@
 package salessystem.model;
 
 public class Customer {
-    private String nic ;
+    private int customerID;
     private String name;
     private String contactNumber;
 
@@ -11,10 +11,14 @@ public class Customer {
         this.name = name;
     }
 
-    public void setNic(String nic) {
-        validateNic(nic);
-        this.nic = nic;
+    public void setCustomerID(int customerID){
+        if (this.customerID != 0) { // it gets set by the database as customerID is the primary key and is set to auto increment
+            throw new IllegalStateException("ID already set");
+        }
+        this.customerID = customerID;
     }
+
+
 
     public void setContactNumber(String contactNumber) {
         validateContactNumber(contactNumber);
@@ -27,26 +31,33 @@ public class Customer {
         return contactNumber;
     }
 
-    public String getNic() {
-        return nic;
-    }
-
     public String getName() {
         return name;
     }
 
-    public Customer(String nic, String name, String contactNumber){
+    public int getCustomerID() {
+        return customerID;
+    }
 
-        setNic(nic);
+    //for new customers, id not set yet by the database
+    public Customer(String name, String contactNumber){
+
         setName(name);
         setContactNumber(contactNumber);
 
     }
 
+    //for CRUD usage
+    //for retrieving existing customers from the database
+    public Customer(int customerID, String name, String contactNumber){
+        this(name, contactNumber);
+        setCustomerID(customerID);
+    }
+
     @Override
     public String toString(){
         String msg = "\nName : "+getName();
-        msg += "\nNIC Number : "+getNic();
+        msg += "\nCustomer ID: "+getCustomerID();
         msg += "\nContact Number : "+getContactNumber();
         return msg;
     }
@@ -59,19 +70,6 @@ public class Customer {
         if (name == null || name.trim().isEmpty()){
             throw new IllegalArgumentException(" Customer name cannot be empty ! ");
         }
-    }
-
-    public void validateNic(String nic){
-        if(nic == null || nic.trim().isEmpty()){
-            throw new IllegalArgumentException(" NIC number cannot be empty ! ");
-        }
-        if (!isNumericOnly(nic)){
-            throw new IllegalArgumentException(" NIC only contains numbers ! ");
-        }
-        if (nic.length() != 12) {
-            throw new IllegalArgumentException(" An NIC number must contain 12 digits ! ");
-        }
-
     }
 
     public void validateContactNumber(String contactNumber){

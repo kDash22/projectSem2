@@ -21,7 +21,7 @@ public class Product {
     public Product(int productID,String productName, UnitType unitType, double price, double stock){
 
         this(productName,unitType,price,stock);
-        this.productId = productID;
+        setProductId(productID);
     }
 
     public String toString() {

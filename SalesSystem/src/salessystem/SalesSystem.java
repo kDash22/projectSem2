@@ -16,17 +16,17 @@ public class SalesSystem {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Admin a1 = new Admin(1,"Kalana", "Dasanayaka", "Maekar2295!@#");
+        Admin a1 = new Admin("Kalana", "Dasanayaka", "Maekar2295!@#");
         System.out.println(a1);
         
 
-        Clerk c1 = new Clerk(2,"john", "java", "Maekar2295!@#");
+        Clerk c1 = new Clerk("john", "java", "Maekar2295!@#");
         System.out.println(c1);
         
         a1.overridePassword(c1,"John@2295");
         System.out.println(c1);
 
-        Customer cus = new Customer("200433504456", "Kalana Dasanyaka", "0725091436");
+        Customer cus = new Customer("Kalana Dasanyaka", "0725091436");
         System.out.println(cus);
 
         Product prod1 = new Product( "Rice packet", UnitType.PIECE, 200, 10. );

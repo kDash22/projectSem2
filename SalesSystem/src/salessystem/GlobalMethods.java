@@ -20,6 +20,7 @@ public class GlobalMethods {
         }else {
             for (T thing : things) {
                 System.out.println(thing);
+
             }
         }
     }

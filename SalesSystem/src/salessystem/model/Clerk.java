@@ -5,10 +5,16 @@ public class Clerk extends User{
     //print receipt 
     //update quantity
 
-
-    public Clerk(int employeeID,String fName, String lName, String password ){
-        super(employeeID,fName,lName,password);
+    //for creating new Clerks only
+    public Clerk(String firstName, String lastName, String password){
+        super(firstName, lastName, password);
     }
+
+    //for retrieving existing Clerks from the database only
+    public Clerk(int userID,String firstName, String lastName, String userName, String password){
+        super(userID,firstName,lastName,userName,password);
+    }
+
 
     @Override
     void displayRole() {
