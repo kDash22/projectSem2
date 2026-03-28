@@ -1,11 +1,18 @@
 package salessystem.model;
 
 public class Admin extends User {
-    //override password of user 
-    public Admin(int employeeID,String firstName, String lastName, String password){
+    //override password of user
 
-        super(employeeID,firstName, lastName, password);
+    //for creating new Admins only
+    public Admin(String firstName, String lastName, String password){
+         super(firstName, lastName, password);
     }
+
+    //for retrieving existing Admins from the database only
+    public Admin(int userID,String firstName, String lastName, String userName, String password){
+        super(userID,firstName,lastName,userName,password);
+    }
+
 
     @Override
     void displayRole() {

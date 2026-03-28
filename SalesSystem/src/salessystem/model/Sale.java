@@ -57,7 +57,7 @@ public class Sale {
     @Override
     public String toString(){
         String msg = "\nSale ID : "+getSaleID();
-        msg += "\nCustomer NIC : "+getCustomer().getNic();
+        msg += "\nCustomer ID : "+getCustomer().getCustomerID();
         msg += "\nCustomer Name : "+getCustomer().getName();
         msg += "\nTime : "+ GlobalMethods.dateTimeFormat(getDate());
         msg += "\nSale items : "+getSaleItems();

@@ -6,22 +6,19 @@ import salessystem.model.Clerk;
 import salessystem.model.User;
 
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDAo {
+public class UserDAO {
 
     public void addUser(User user)  {
-        String sql = "INSERT INTO employee (employee_id,fname,lname,user_name,password,role) VALUES (?,?,?,?,?,?)";
+        String sql = "INSERT INTO employee (fname,lname,username,password,role) VALUES (?,?,?,?,?)";
 
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)
+             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
         ){
-            ps.setInt(1, user.getEmployeeId());
+
             ps.setString(2, user.getFirstName());
             ps.setString(3, user.getLastName());
             ps.setString(4, user.getUserName());
@@ -29,6 +26,13 @@ public class UserDAo {
             ps.setString(6, user.getRole());
 
             ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+
+                if (rs.next()) {
+                    user.setUserID(rs.getInt(1));
+                }
+
         }
         catch (SQLException e){
             throw new RuntimeException("Error adding user.");
@@ -37,7 +41,7 @@ public class UserDAo {
     }
 
     public User getUserByUsername(String username){
-        String sql = "SELECT * FROM employee WHERE user_name = ?";
+        String sql = "SELECT * FROM employee WHERE username = ?";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)
@@ -45,13 +49,14 @@ public class UserDAo {
             ps.setString(1, username);
 
             try(ResultSet rs = ps.executeQuery()){
-
+    //public Clerk(int userID,String firstName, String lastName, String userName, String password)
                 if (rs.next()){
                     if (rs.getString("role").equals("Admin")){
                         Admin admin = new Admin(
                                 rs.getInt("employee_id"),
                                 rs.getString("fname"),
                                 rs.getString("lname"),
+                                rs.getString("username"),
                                 rs.getString("password"));
                         return admin;
 
@@ -61,6 +66,7 @@ public class UserDAo {
                                 rs.getInt("employee_id"),
                                 rs.getString("fname"),
                                 rs.getString("lname"),
+                                rs.getString("username"),
                                 rs.getString("password"));
                         return clerk;
                     }
@@ -89,6 +95,7 @@ public class UserDAo {
                             rs.getInt("employee_id"),
                             rs.getString("fname"),
                             rs.getString("lname"),
+                            rs.getString("username"),
                             rs.getString("password")
                     ));
                 }
@@ -98,6 +105,7 @@ public class UserDAo {
                             rs.getInt("employee_id"),
                             rs.getString("fname"),
                             rs.getString("lname"),
+                            rs.getString("username"),
                             rs.getString("password")
                     ));
                 }
@@ -126,10 +134,62 @@ public class UserDAo {
             throw new RuntimeException("Error deleting user.",e );
 
         }
+    }
+    //    firstName;
+    //    lastName;
+    //    password;
+    public boolean updateUser(int userID,User user){
+        String sql = "INSERT INTO employee(fname, lname, password) VALUES (?,?,?) WHERE employee_id = ?";
 
+        try(Connection con = DBConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(sql)){
 
+            ps.setString(1, user.getFirstName());
+            ps.setString(2, user.getLastName());
+            ps.setString(3, user.getPassword());
+            ps.setInt(4, userID);
 
+            int rows = ps.executeUpdate();
+            return rows>0;
 
+        } catch (SQLException e) {
+            throw new RuntimeException(" Error occurred while updating user ! ",e);
+        }
     }
 
+    public boolean updatePassword(int userID, User user){
+        String sql = "INSERT INTO employee(password) VALUES (?) WHERE employee_id = ?";
+
+        try(Connection con = DBConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(sql)){
+
+            ps.setString(1, user.getPassword());
+            ps.setInt(2, userID);
+
+            int rows = ps.executeUpdate();
+            return rows>0;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(" Error occurred while updating password ! ",e);
+        }
+    }
+
+    public boolean updateName(int userID, User user){
+        String sql = "INSERT INTO employee(fname, lname) VALUES (?,?) WHERE employee_id = ?";
+
+        try(Connection con = DBConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(sql)){
+
+            ps.setString(1, user.getFirstName());
+            ps.setString(2, user.getLastName());
+            ps.setInt(3, userID);
+
+            int rows = ps.executeUpdate();
+            return rows>0;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(" Error occurred while updating password ! ",e);
+        }
+
+    }
 }

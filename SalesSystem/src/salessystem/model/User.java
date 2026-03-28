@@ -3,19 +3,16 @@ package salessystem.model;
 public abstract class User {
     protected String firstName;
     protected String lastName;
-
-
-    private final int employeeId;
-    
-    
-    private final String userName;
+    private int userID;
+    private String userName;
     private String password;
 
     abstract void displayRole();
 
     //getters
-    public int getEmployeeId() {
-        return employeeId;
+
+    public int getUserID() {
+        return userID;
     }
     public String getFirstName() {
         return firstName;
@@ -32,7 +29,14 @@ public abstract class User {
     public abstract String getRole();
 
     //setters
-    
+    public final void setUserID(int userID){
+        if (this.userID != 0) { // it gets set by the database as userID is the primary key and is set to auto increment
+            throw new IllegalStateException("ID already set");
+        }
+        this.userID = userID;
+    }
+
+
     public final void setFirstName(String firstName) throws IllegalArgumentException{
         validateFirstName(firstName);
         this.firstName = firstName;
@@ -48,6 +52,9 @@ public abstract class User {
         } 
         this.password = password;
     }
+    public final void createUserName(){
+        this.userName = getLastName().trim().toLowerCase() + getUserID();
+    }
 
     public final void changePassword(String currentPassword, String newPassword) { 
         if (!currentPassword.equals(getPassword())) {
@@ -58,26 +65,36 @@ public abstract class User {
             System.out.println("Password changed successfully.");}
 
     }
-
-    public User(int employeeId,String firstName, String lastName, String password){
+    //for new users, the database will set the userID
+    public User(String firstName, String lastName, String password){
 
         setFirstName(firstName);
         setLastName(lastName);
         setPassword(password);
-        this.employeeId = employeeId;
-        this.userName = getLastName().toLowerCase()+getEmployeeId();
+        createUserName();
+
+    }
+
+    //for retrieving old users from the database
+    public User(int userID,String firstName, String lastName, String userName, String password){
+        this(firstName,lastName,password);
+        this.userID = userID;
+        this.userName = userName;
     }
 
     @Override
     public String toString(){
         String tag = "\nName : "+getFirstName()+" "+getLastName();
-        tag += "\nEmployee ID : "+getEmployeeId();
+        tag += "\nUser ID : "+ getUserID();
         tag += "\nUserName : "+getUserName();
         tag += "\nPassword : "+getPassword();
         return tag;
     }
 
      //validation
+    public void validateEmployeeID(){
+
+    }
      public void validateFirstName(String firstName){
          if(firstName == null || firstName.trim().isEmpty()){
              throw new IllegalArgumentException("First name cannot be empty");
