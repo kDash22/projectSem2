@@ -9,7 +9,7 @@ public class TestNewAdmin implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Admin a1 = new Admin(1,"Kalana", "Dasanayaka", "Maekar2295!@#");
+        Admin a1 = new Admin("Kalana", "Dasanayaka", "Maekar2295!@#");
         System.out.println(a1);
     }
 

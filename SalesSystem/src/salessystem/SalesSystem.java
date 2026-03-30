@@ -4,6 +4,7 @@
  */
 package salessystem;
 
+import salessystem.dao.*;
 import salessystem.model.*;
 
 /**
@@ -16,41 +17,70 @@ public class SalesSystem {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Admin a1 = new Admin("Kalana", "Dasanayaka", "Maekar2295!@#");
-        System.out.println(a1);
-        
+        /*
+        Admin u1 = new Admin("Kalana", "Dasanayaka", "Maekar2295!@#");
+        Clerk u2 = new Clerk("john", "java", "Maekar2295!@#");
 
-        Clerk c1 = new Clerk("john", "java", "Maekar2295!@#");
-        System.out.println(c1);
-        
-        a1.overridePassword(c1,"John@2295");
-        System.out.println(c1);
+        UserDAO udao = new UserDAO();
+        udao.addUser(u1);
+        udao.addUser(u2);
+        System.out.println("\n\n Users");
+        GlobalMethods.printList(udao.getAllUsers());
 
-        Customer cus = new Customer("Kalana Dasanyaka", "0725091436");
-        System.out.println(cus);
+        Customer c1 = new Customer("Kalana Dasanyaka", "0725091436");
+        Customer c2 = new Customer( "Aemon Targareyan", "1234567890");
 
-        Product prod1 = new Product( "Rice packet", UnitType.PIECE, 200, 10. );
-        System.out.println(prod1);
+        CustomerDAO cdao = new CustomerDAO();
+        cdao.addCustomer(c1);
+        cdao.addCustomer(c2);
+        System.out.println("\n\n Customers");
+        GlobalMethods.printList(cdao.getAllCustomers());
 
-        Product prod2 = new Product("Sugar ", UnitType.WEIGHT, 150, 25.5);
-        System.out.println(prod2);
 
-        SaleItem item1 = new SaleItem(prod1, 10);
-        System.out.println(item1);
+        Sale s = new Sale(c2);
 
-        SaleItem item2 = new SaleItem(prod2, 10);
-        System.out.println(item2);
+        Product p1 = new Product("Rice packet 1kg", UnitType.PIECE, 200, 50);
+        Product p2 = new Product("Sugar", UnitType.WEIGHT, 150, 70.5);
+        Product p3 = new Product("cigarette packets", UnitType.PIECE, 3500, 50);
+        ProductDAO pdao = new ProductDAO();
 
-        Sale sale1 = new Sale(cus);
-        System.out.println(sale1);
+        pdao.addProduct(p1);
+        pdao.addProduct(p2);
+        pdao.addProduct(p3);
 
-        sale1.addSaleItem(item1);
-        sale1.addSaleItem(item2);
+        SaleItem saleItem = new SaleItem(p1,10);
+        SaleItem saleItem1 = new SaleItem(p2, 11.5);
+        SaleItem saleItem2 = new SaleItem(p3, 2);
 
-        System.out.println();
-        System.out.println(sale1);
+        s.addSaleItem(saleItem);
+        s.addSaleItem(saleItem1);
+        s.addSaleItem(saleItem2);
+
+        SaleDAO sdao = new SaleDAO();
+        sdao.addSale(s);
+
+        System.out.println("\n\n Sales");
+        System.out.println(sdao.getSaleBySaleID(1));
+
+
+        SaleItemDAO sidao = new SaleItemDAO();
+        System.out.println("\n\n Sale items");
+        GlobalMethods.printList(sidao.getAllSaleItems());
+
+        sidao.deleteSaleItem(1);
+        sidao.deleteSaleItem(2);
+        sidao.deleteSaleItem(3);
+
+        sdao.deleteSale(1);
+
+        System.out.println(sdao.getSaleBySaleID(1));
+
+         */
+
+
+    }
 
 
     }
     
-}
+

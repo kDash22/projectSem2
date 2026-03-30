@@ -2,16 +2,21 @@ package salessystem.model;
 
 public class SaleItem {
 
-    private final int saleItemID = 0 ;
-    private final Product product;
-    private final double quantity;
+    private int saleItemID;
+    private  Product product;
+    private double quantity;
+    private double subtotal;
 
-    void setSaleItemID(){
-
+    //setters
+    public void setSaleItemID(int saleItemID){
+        if (this.saleItemID != 0) { // it gets set by the database as saleItemID is the primary key and is set to auto increment
+            throw new IllegalStateException("ID already set");
+        }this.saleItemID = saleItemID;
     }
+
     //getters
     public double getSubtotal() {
-        return getUnitPrice() * quantity;
+        return subtotal;
     }
 
     public double getUnitPrice() {
@@ -48,10 +53,20 @@ public class SaleItem {
 
     }
 
+    //for creating new salesItems to be entered into the database
     public SaleItem(Product product, double quantity){
         validateQuantity(product,quantity);
         this.product = product;
         this.quantity = quantity;
+        this.subtotal = product.getPrice() * quantity;
+    }
+
+    //for retrieving existing salesItems from the database
+    public SaleItem(int saleItemID, Product product, double quantity, double subtotal) {
+        this.saleItemID = saleItemID;
+        this.product = product;
+        this.quantity = quantity;
+        this.subtotal = subtotal;
     }
 
     public void validateQuantity(Product product,double quantity){

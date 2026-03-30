@@ -14,7 +14,7 @@ public class ProductDAO {
 
     public void addProduct(Product product){
 
-        String sql = "INSERT INTO product ( product_name, price, stock, unit_type) VALUES (?,?,?,?)";
+        String sql = "INSERT INTO products ( product_name, price, stock, unit_type) VALUES (?,?,?,?)";
 
         try(Connection con = DBConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
@@ -38,7 +38,7 @@ public class ProductDAO {
     }
 
     public Product getProductByProductID(int productID){
-        String sql = "SELECT * FROM product WHERE product_id = ? ";
+        String sql = "SELECT * FROM products WHERE product_id = ? ";
 
         try(Connection con = DBConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(sql)){
@@ -65,7 +65,7 @@ public class ProductDAO {
 
     public List<Product> getAllProducts(){
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT * FROM product";
+        String sql = "SELECT * FROM products";
 
         try(Connection con = DBConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
@@ -89,7 +89,7 @@ public class ProductDAO {
     }
 
     public void deleteProduct(int productID){
-        String sql = "DELETE FROM product WHERE product_id = ?";
+        String sql = "DELETE FROM products WHERE product_id = ?";
         try(Connection con = DBConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(sql)){
                 ps.setInt(1, productID);
@@ -101,7 +101,7 @@ public class ProductDAO {
 
     public boolean updateProduct( int productId, Product product){
 
-        String sql = "UPDATE product SET product_name = ?, price = ?, stock = ? WHERE customer_id = ?";
+        String sql = "UPDATE products SET product_name = ?, price = ?, stock = ? WHERE customer_id = ?";
 
         try(Connection con = DBConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(sql)){
@@ -121,7 +121,7 @@ public class ProductDAO {
 
     public boolean updateProductStock( int productId, Product product){
 
-        String sql = "UPDATE product SET stock = ? WHERE customer_id = ?";
+        String sql = "UPDATE products SET stock = ? WHERE product_id = ?";
 
 
         try(Connection con = DBConnection.getConnection();
@@ -141,7 +141,7 @@ public class ProductDAO {
 
     public boolean updateProductPrice( int productId, Product product){
 
-        String sql = "UPDATE product SET price = ? WHERE customer_id = ?";
+        String sql = "UPDATE products SET price = ? WHERE product_id = ?";
 
 
         try(Connection con = DBConnection.getConnection();
@@ -159,23 +159,4 @@ public class ProductDAO {
         }
     }
 
-
-
-    public static void main(String[] args) {
-        Product p1 = new Product("Rice packet 1kg", UnitType.PIECE, 200, 50);
-        Product p2 = new Product("Sugar", UnitType.WEIGHT, 150, 70.5);
-        Product p3 = new Product("cigarette packets", UnitType.PIECE, 3500, 50);
-        System.out.println(p3);
-        ProductDAO pdao = new ProductDAO();
-
-        pdao.addProduct(p1);
-        pdao.addProduct(p2);
-        pdao.addProduct(p3);
-
-        System.out.println("\n by id");
-        System.out.println(pdao.getProductByProductID(3));
-
-        System.out.println("\n everything");
-        GlobalMethods.printList(pdao.getAllProducts());
-    }
 }

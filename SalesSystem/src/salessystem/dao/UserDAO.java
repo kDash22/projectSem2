@@ -13,35 +13,50 @@ import java.util.List;
 public class UserDAO {
 
     public void addUser(User user)  {
-        String sql = "INSERT INTO employee (fname,lname,username,password,role) VALUES (?,?,?,?,?)";
+        String insertSql = "INSERT INTO users (fname,lname,username,password,role) VALUES (?,?,?,?,?)";
+        String updateSql = "UPDATE users SET username = ? WHERE user_id = ?";
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
-        ){
+        try(Connection connection = DBConnection.getConnection()){
 
-            ps.setString(2, user.getFirstName());
-            ps.setString(3, user.getLastName());
-            ps.setString(4, user.getUserName());
-            ps.setString(5, user.getPassword());
-            ps.setString(6, user.getRole());
+            connection.setAutoCommit(false); //start a transaction to ensure atomicity
 
-            ps.executeUpdate();
+            try (PreparedStatement psInsert = connection.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS);
+                 PreparedStatement psUpdate = connection.prepareStatement(updateSql)){
 
-            ResultSet rs = ps.getGeneratedKeys();
+                String temUserName = "TEMP_"+System.nanoTime();
+                psInsert.setString(1, user.getFirstName());
+                psInsert.setString(2, user.getLastName());
+                psInsert.setString(3, temUserName);
+                psInsert.setString(4, user.getPassword());
+                psInsert.setString(5, user.getRole());
 
-                if (rs.next()) {
-                    user.setUserID(rs.getInt(1));
-                }
+                psInsert.executeUpdate();
 
-        }
-        catch (SQLException e){
-            throw new RuntimeException("Error adding user.");
+                ResultSet rs = psInsert.getGeneratedKeys();
 
+                    if (rs.next()) {
+                        user.setUserID(rs.getInt(1));
+                        user.createUserName();
+
+                        psUpdate.setString(1, user.getUserName());
+                        psUpdate.setInt(2, user.getUserID());
+                        psUpdate.executeUpdate();
+                    }
+                    connection.commit(); // end transaction
+
+            }
+            catch (SQLException e){
+                connection.rollback();
+                throw new RuntimeException(" Error (1) occurred while adding user ! ",e);
+
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(" Error (2) occurred while adding user ! ",e);
         }
     }
 
     public User getUserByUsername(String username){
-        String sql = "SELECT * FROM employee WHERE username = ?";
+        String sql = "SELECT * FROM users WHERE username = ?";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)
@@ -53,7 +68,7 @@ public class UserDAO {
                 if (rs.next()){
                     if (rs.getString("role").equals("Admin")){
                         Admin admin = new Admin(
-                                rs.getInt("employee_id"),
+                                rs.getInt("user_id"),
                                 rs.getString("fname"),
                                 rs.getString("lname"),
                                 rs.getString("username"),
@@ -63,7 +78,45 @@ public class UserDAO {
                     }
                     if (rs.getString("role").equals("Clerk")){
                         Clerk clerk = new Clerk(
-                                rs.getInt("employee_id"),
+                                rs.getInt("user_id"),
+                                rs.getString("fname"),
+                                rs.getString("lname"),
+                                rs.getString("username"),
+                                rs.getString("password"));
+                        return clerk;
+                    }
+                }
+            }
+
+        } catch (SQLException ex) {
+            throw new RuntimeException("Error fetching User.",ex);
+        }
+        return null;
+    }
+    public User getUserByUserID(int userID){
+        String sql = "SELECT * FROM users WHERE user_id = ?";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)
+        ){
+            ps.setInt(1, userID);
+
+            try(ResultSet rs = ps.executeQuery()){
+                //public Clerk(int userID,String firstName, String lastName, String userName, String password)
+                if (rs.next()){
+                    if (rs.getString("role").equals("Admin")){
+                        Admin admin = new Admin(
+                                rs.getInt("user_id"),
+                                rs.getString("fname"),
+                                rs.getString("lname"),
+                                rs.getString("username"),
+                                rs.getString("password"));
+                        return admin;
+
+                    }
+                    if (rs.getString("role").equals("Clerk")){
+                        Clerk clerk = new Clerk(
+                                rs.getInt("user_id"),
                                 rs.getString("fname"),
                                 rs.getString("lname"),
                                 rs.getString("username"),
@@ -82,7 +135,7 @@ public class UserDAO {
     public List<User> getAllUsers(){
 
         List<User> users = new ArrayList<>();
-        String sql = "SELECT * FROM employee";
+        String sql = "SELECT * FROM users";
 
         try(Connection con = DBConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
@@ -92,7 +145,7 @@ public class UserDAO {
 
                 if (rs.getString("role").equals("Admin")){
                     users.add(new Admin(
-                            rs.getInt("employee_id"),
+                            rs.getInt("user_id"),
                             rs.getString("fname"),
                             rs.getString("lname"),
                             rs.getString("username"),
@@ -102,7 +155,7 @@ public class UserDAO {
 
                 if (rs.getString("role").equals("Clerk")){
                     users.add(new Clerk(
-                            rs.getInt("employee_id"),
+                            rs.getInt("user_id"),
                             rs.getString("fname"),
                             rs.getString("lname"),
                             rs.getString("username"),
@@ -121,13 +174,13 @@ public class UserDAO {
         return users;
     }
 
-    public void deleteUser(int empId){
+    public void deleteUser(int userID){
 
-        String sql = "DELETE FROM employee WHERE employee_id = ?";
+        String sql = "DELETE FROM users WHERE user_id = ?";
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)
         ){
-            ps.setInt(1, empId);
+            ps.setInt(1, userID);
             ps.executeUpdate();
         }
         catch (SQLException e){
@@ -135,30 +188,10 @@ public class UserDAO {
 
         }
     }
-    //    firstName;
-    //    lastName;
-    //    password;
-    public boolean updateUser(int userID,User user){
-        String sql = "INSERT INTO employee(fname, lname, password) VALUES (?,?,?) WHERE employee_id = ?";
 
-        try(Connection con = DBConnection.getConnection();
-            PreparedStatement ps = con.prepareStatement(sql)){
-
-            ps.setString(1, user.getFirstName());
-            ps.setString(2, user.getLastName());
-            ps.setString(3, user.getPassword());
-            ps.setInt(4, userID);
-
-            int rows = ps.executeUpdate();
-            return rows>0;
-
-        } catch (SQLException e) {
-            throw new RuntimeException(" Error occurred while updating user ! ",e);
-        }
-    }
 
     public boolean updatePassword(int userID, User user){
-        String sql = "INSERT INTO employee(password) VALUES (?) WHERE employee_id = ?";
+        String sql = "UPDATE users SET password = ? WHERE user_id = ?";
 
         try(Connection con = DBConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(sql)){
@@ -175,7 +208,7 @@ public class UserDAO {
     }
 
     public boolean updateName(int userID, User user){
-        String sql = "INSERT INTO employee(fname, lname) VALUES (?,?) WHERE employee_id = ?";
+        String sql = "UPDATE users SET fname = ?, lname = ? WHERE user_id = ?";
 
         try(Connection con = DBConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(sql)){

@@ -24,6 +24,17 @@ public class GlobalMethods {
             }
         }
     }
+    public static <T> String getListString(List<T> things){
+        if(things.isEmpty()){
+            return "The list is empty.";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for(T thing : things){
+            sb.append(thing).append("\n");
+        }
+        return sb.toString();
+    }
 
 
 }

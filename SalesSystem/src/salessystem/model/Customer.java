@@ -21,7 +21,7 @@ public class Customer {
 
 
     public void setContactNumber(String contactNumber) {
-        validateContactNumber(contactNumber);
+        if (validateContactNumber(contactNumber))
         this.contactNumber = contactNumber;
     }
 
@@ -72,16 +72,15 @@ public class Customer {
         }
     }
 
-    public void validateContactNumber(String contactNumber){
+    public static boolean validateContactNumber(String contactNumber){
+
         if (contactNumber == null || contactNumber.trim().isEmpty()){
-            throw new IllegalArgumentException(" The contact number cannot be empty ! ");
+            return false;
         }
         if (contactNumber.length() != 10) {
-            throw new IllegalArgumentException(" The contact number must contain 10 digits ! ");
+            return false;
         }
-        if (!isNumericOnly(contactNumber)){
-            throw new IllegalArgumentException(" The contact number only contains numbers ! ");
-        }
+        return isNumericOnly(contactNumber);
 
     }
 

@@ -13,7 +13,7 @@ public class CustomerDAO {
 
     public void addCustomer(Customer customer){
 
-        String sql = "INSERT INTO customer(name, contact) VALUES (?,?)";
+        String sql = "INSERT INTO customers(name, contact) VALUES (?,?)";
 
         try(Connection con = DBConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
@@ -35,7 +35,7 @@ public class CustomerDAO {
     }
 
     public Customer getCustomerByCustomerID(int customerID){
-        String sql =  "SELECT * FROM customer WHERE customer_id = ?";
+        String sql =  "SELECT * FROM customers WHERE customer_id = ?";
 
         try(Connection con = DBConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(sql)
@@ -59,7 +59,7 @@ public class CustomerDAO {
     public List<Customer> getAllCustomers(){
 
         List<Customer> customers = new ArrayList<>();
-        String sql = "SELECT * FROM customer";
+        String sql = "SELECT * FROM customers";
 
         try(Connection con = DBConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
@@ -79,7 +79,7 @@ public class CustomerDAO {
     }
 
     public void deleteCustomer(int customerID){
-        String sql = "DELETE FROM customer WHERE customer_id = ?";
+        String sql = "DELETE FROM customers WHERE customer_id = ?";
 
         try(Connection con = DBConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(sql)){
@@ -95,7 +95,7 @@ public class CustomerDAO {
 
     public boolean updateCustomer( int customerID, Customer customer){
 
-        String sql = "UPDATE customer SET name = ?, contact = ? WHERE customer_id = ?";
+        String sql = "UPDATE customers SET name = ?, contact = ? WHERE customer_id = ?";
 
         try(Connection con = DBConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(sql)){
@@ -113,7 +113,7 @@ public class CustomerDAO {
     }
 
     public boolean updateCustomerContact(int customerID, Customer customer){
-        String sql = "UPDATE customer SET contact = ? WHERE customer_id = ?";
+        String sql = "UPDATE customers SET contact = ? WHERE customer_id = ?";
 
         try(Connection con = DBConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
@@ -129,31 +129,6 @@ public class CustomerDAO {
 
     }
 
-    static void main(String[] args) {
 
-        Customer c1 = new Customer("Tywin Lannister", "1234567890");
-        Customer c2 = new Customer("Olenna Tyrell","1234567890");
-        Customer c3 = new Customer("John snow","1234567890");
-
-        CustomerDAO cdao = new CustomerDAO();
-        cdao.addCustomer(c1);
-        cdao.addCustomer(c2);
-        cdao.addCustomer(c3);
-
-        System.out.println(" The king in the north");
-        System.out.println(cdao.getCustomerByCustomerID(3));
-        cdao.deleteCustomer(2);
-        System.out.println();
-        System.out.println("all of them");
-        GlobalMethods.printList(cdao.getAllCustomers());
-
-        System.out.println("\n"+cdao.updateCustomer(3 ,new Customer("Aemon Targareyan","1234567890")));
-        System.out.println("\n"+cdao.updateCustomerContact(1, new Customer("coming through","0987654321")));
-
-        System.out.println(" new and updated");
-        GlobalMethods.printList(cdao.getAllCustomers());
-
-
-    }
 }
 
