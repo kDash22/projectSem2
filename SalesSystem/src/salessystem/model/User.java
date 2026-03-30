@@ -71,7 +71,6 @@ public abstract class User {
         setFirstName(firstName);
         setLastName(lastName);
         setPassword(password);
-        createUserName();
 
     }
 
@@ -92,9 +91,6 @@ public abstract class User {
     }
 
      //validation
-    public void validateEmployeeID(){
-
-    }
      public void validateFirstName(String firstName){
          if(firstName == null || firstName.trim().isEmpty()){
              throw new IllegalArgumentException("First name cannot be empty");
@@ -107,7 +103,7 @@ public abstract class User {
          }
      }
 
-    public boolean validatePassword(String password){
+    public static boolean validatePassword(String password){
         if (!(password!= null && password.length() > 8 ))
         {
             return false;
