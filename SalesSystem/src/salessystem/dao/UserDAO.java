@@ -17,7 +17,7 @@ public class UserDAO {
     //uses a transaction to ensure insert and update both complete or none does
     public void addUser(User user)  {
 
-        String insertSql = "INSERT INTO users (fname,lname,username,password,role) VALUES (?,?,?,?,?)";
+        String insertSql = "INSERT INTO users (first_name,last_name,username,password,role) VALUES (?,?,?,?,?)";
         String updateSql = "UPDATE users SET username = ? WHERE user_id = ?";
 
         try(Connection connection = DBConnection.getConnection()){
@@ -87,8 +87,8 @@ public class UserDAO {
 
                         return new Admin(
                                 rs.getInt("user_id"),
-                                rs.getString("fname"),
-                                rs.getString("lname"),
+                                rs.getString("first_name"),
+                                rs.getString("last_name"),
                                 rs.getString("username"),
                                 rs.getString("password"));
 
@@ -97,8 +97,8 @@ public class UserDAO {
 
                         return new Clerk(
                                 rs.getInt("user_id"),
-                                rs.getString("fname"),
-                                rs.getString("lname"),
+                                rs.getString("first_name"),
+                                rs.getString("last_name"),
                                 rs.getString("username"),
                                 rs.getString("password"));
                     }
@@ -130,8 +130,8 @@ public class UserDAO {
 
                         return new Admin(
                                 rs.getInt("user_id"),
-                                rs.getString("fname"),
-                                rs.getString("lname"),
+                                rs.getString("first_name"),
+                                rs.getString("last_name"),
                                 rs.getString("username"),
                                 rs.getString("password"));
 
@@ -140,8 +140,8 @@ public class UserDAO {
 
                         return new Clerk(
                                 rs.getInt("user_id"),
-                                rs.getString("fname"),
-                                rs.getString("lname"),
+                                rs.getString("first_name"),
+                                rs.getString("last_name"),
                                 rs.getString("username"),
                                 rs.getString("password"));
                     }
@@ -169,8 +169,8 @@ public class UserDAO {
                 if (rs.getString("role").equals("Admin")){
                     users.add(new Admin(
                             rs.getInt("user_id"),
-                            rs.getString("fname"),
-                            rs.getString("lname"),
+                            rs.getString("first_name"),
+                            rs.getString("last_name"),
                             rs.getString("username"),
                             rs.getString("password")
                     ));
@@ -179,8 +179,8 @@ public class UserDAO {
                 if (rs.getString("role").equals("Clerk")){
                     users.add(new Clerk(
                             rs.getInt("user_id"),
-                            rs.getString("fname"),
-                            rs.getString("lname"),
+                            rs.getString("first_name"),
+                            rs.getString("last_name"),
                             rs.getString("username"),
                             rs.getString("password")
                     ));
@@ -234,7 +234,7 @@ public class UserDAO {
 
     //changes both first name and last name of a user
     public void updateName(int userID, User user){
-        String sql = "UPDATE users SET fname = ?, lname = ? WHERE user_id = ?";
+        String sql = "UPDATE users SET first_name = ?, last_name = ? WHERE user_id = ?";
 
         try(Connection con = DBConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(sql)){
