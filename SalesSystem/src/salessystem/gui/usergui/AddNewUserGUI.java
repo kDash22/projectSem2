@@ -9,16 +9,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
 
+//provides the JDialog for adding a new user
 public class AddNewUserGUI extends JDialog {
 
-    private JTextField firstNameText;
-    private JTextField lastNameText;
-    private JPasswordField passwordField;
-    private JPasswordField confirmPasswordField;
-    private JLabel passwordStatus;
-    private JLabel nameStatus;
+    private JTextField firstNameText;//input field for first name
+    private JTextField lastNameText;//input field for last name
+    private JPasswordField passwordField;//password field for password
+    private JPasswordField confirmPasswordField;//password field for confirm password
+    private JLabel passwordStatus;//displays errors related to password
+    private JLabel nameStatus;//display errors related to name
 
-
+    //initialise the JDialog
+    //includes
+    // - user info form (left)
+    // - user table (left)
+    // - confirm button
     public AddNewUserGUI(JFrame parent) {
         super(parent, "Add New User", true);
 
@@ -26,17 +31,18 @@ public class AddNewUserGUI extends JDialog {
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
+        //main panel
         JPanel parentPanel = new JPanel();
         parentPanel.setLayout(null);
         add(parentPanel);
 
+        //table panel
         JPanel panel = new JPanel();
         panel.setBounds(300, 20, 550,250);
         parentPanel.add(panel);
 
         panel.removeAll();
         GetAllUserGUI.UserTable(panel);
-
 
         JLabel firstName = new JLabel("First Name ");
         firstName.setBounds(10, 20, 120, 30);
@@ -78,9 +84,12 @@ public class AddNewUserGUI extends JDialog {
 
         JButton button = new JButton(" Confirm ");
         button.setBounds(10, 225, 165, 25);
+
+        //handles insertion and UI refresh
         button.addActionListener(e -> {
             newUser();
 
+            //table refresh
             panel.removeAll();
             panel.revalidate();
             panel.repaint();
@@ -97,6 +106,8 @@ public class AddNewUserGUI extends JDialog {
 
     }
 
+    //validates entered info
+    //inserts data into the database using the DAO
     private void newUser() {
         String firstName = firstNameText.getText();
         String lastName = lastNameText.getText();
@@ -105,13 +116,11 @@ public class AddNewUserGUI extends JDialog {
         boolean passwordCheck = false;
         boolean nameCheck = false;
 
-
-
-
+        //validates password using a method
         if (User.validatePassword(new String(password))) {
 
+            //checks if password matches confirm password
             if (Arrays.equals(password, confirmed)) {
-
                 passwordCheck = true;
                 passwordStatus.setText("");
 
@@ -119,7 +128,6 @@ public class AddNewUserGUI extends JDialog {
                 passwordStatus.setText(" Passwords do not match ! ");
                 confirmPasswordField.setText("");
             }
-
             passwordStatus.setText("");
 
         } else {
@@ -131,6 +139,7 @@ public class AddNewUserGUI extends JDialog {
 
         }
 
+        //name cannot be empty or blank
         if (firstName != null && !firstName.isBlank()
                 && lastName != null && !lastName.isBlank()) {
 
@@ -148,10 +157,12 @@ public class AddNewUserGUI extends JDialog {
 
         }
 
+        //if all checks are passed
         if (nameCheck && passwordCheck){
 
             String[] options = {"Admin", "Clerk"};
 
+            //role select
             int choice = JOptionPane.showOptionDialog(
                     //checks role
                     null,
@@ -188,6 +199,7 @@ public class AddNewUserGUI extends JDialog {
 
             }
 
+            //wipe passwords
             Arrays.fill(password, '\0'); //password erasure
             Arrays.fill(confirmed, '\0');
         }

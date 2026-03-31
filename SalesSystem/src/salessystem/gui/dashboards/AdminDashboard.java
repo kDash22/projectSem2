@@ -7,9 +7,11 @@ import salessystem.gui.usergui.*;
 
 import javax.swing.*;
 
-public class AdminDashboard extends JDialog{
+//provides the JDialog for admin dashboard
+public class AdminDashboard extends JDialog implements UserDashboard{
 
-
+    //initialise the JDialog
+    //includes buttons to choose
     public AdminDashboard(JFrame parent){
         super(parent, " Admin Dashboard ",true);
 
@@ -20,7 +22,6 @@ public class AdminDashboard extends JDialog{
         JPanel panel = new JPanel();
         panel.setLayout(null);
         add(panel);
-
         JButton b1 = new JButton("Manage Users");
         b1.setBounds(90,130,150,40);
 
@@ -33,7 +34,7 @@ public class AdminDashboard extends JDialog{
         JButton b4 = new JButton("Manage Sales");
         b4.setBounds(600,130,150,40);
 
-
+        //manages which JDialog gets activated
         b1.addActionListener(e -> openManageUsersDialog(parent));
         b2.addActionListener(e -> openManageCustomersDialog(parent));
         b3.addActionListener(e -> openManageProductsDialog(parent));
@@ -46,6 +47,7 @@ public class AdminDashboard extends JDialog{
 
 
     }
+
     public void openManageUsersDialog(JFrame parent){
 
         JDialog dialog = new JDialog(parent, "Manage Users", true);
@@ -61,6 +63,7 @@ public class AdminDashboard extends JDialog{
 
         dialog.setVisible(true);
     }
+
     public void showManageUsers(JPanel panel, JFrame parent){;
 
         JButton button = new JButton(" Add New User ");
@@ -111,6 +114,7 @@ public class AdminDashboard extends JDialog{
         panel.revalidate();
         panel.repaint();
     }
+
     public void openManageCustomersDialog(JFrame parent){
 
         JDialog dialog = new JDialog(parent, "Manage Customers", true);
@@ -126,6 +130,7 @@ public class AdminDashboard extends JDialog{
 
         dialog.setVisible(true);
     }
+
 
     public void showManageCustomers(JPanel panel, JFrame parent){
 
@@ -177,10 +182,13 @@ public class AdminDashboard extends JDialog{
         });
         panel.add(deleteCustomer);
 
-    }    public void openManageProductsDialog(JFrame parent){
+    }
+
+
+    public void openManageProductsDialog(JFrame parent){
 
         JDialog dialog = new JDialog(parent, "Manage Products ", true);
-        dialog.setSize(1160,300);
+        dialog.setSize(990,300);
         dialog.setLocationRelativeTo(parent);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
@@ -192,8 +200,8 @@ public class AdminDashboard extends JDialog{
 
         dialog.setVisible(true);
     }
-    public void showManageProducts(JPanel panel, JFrame parent){
 
+    public void showManageProducts(JPanel panel, JFrame parent){
 
         JButton addProduct = new JButton("Add Product");
         addProduct.setBounds(90,130,150,40);
@@ -235,18 +243,8 @@ public class AdminDashboard extends JDialog{
         });
         panel.add(updatePrice);
 
-        JButton deleteProduct = new JButton("Delete Product ");
-        deleteProduct.setBounds(940,130,150,40);
-        deleteProduct.addActionListener(e-> {
-            DeleteProductGUI gui = new DeleteProductGUI(parent);
-            gui.setVisible(false);
-        });
-
-
-
-
-
     }
+
     public void openManageSalesDialog(JFrame parent){
 
         JDialog dialog = new JDialog(parent, "Manage Sales", true);

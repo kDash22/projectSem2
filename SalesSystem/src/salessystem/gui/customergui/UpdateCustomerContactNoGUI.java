@@ -6,12 +6,19 @@ import salessystem.model.Customer;
 import javax.swing.*;
 import java.awt.*;
 
+//provides the JDialog for updating customer contact number
 public class UpdateCustomerContactNoGUI extends JDialog{
 
-    private final JTextField customerIDText;
-    private final JLabel customerIDStatus;
-    private final JTextField contactNoText;
-    private final JLabel contactNoStatus;
+    private final JTextField customerIDText; //input field for customer id
+    private final JLabel customerIDStatus;//displays errors regarding customer id
+    private final JTextField contactNoText;//input field for customer number
+    private final JLabel contactNoStatus;//displays errors regarding the contact number
+
+    //initialise the JDialog
+    //includes
+    // - customer info form (left)
+    // - customer table (right)
+    // - confirm button
 
     public UpdateCustomerContactNoGUI(JFrame parent){
         super(parent, "Update The Contact Number", true);
@@ -20,10 +27,12 @@ public class UpdateCustomerContactNoGUI extends JDialog{
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
+        //main panel
         JPanel parentPanel = new JPanel();
         parentPanel.setLayout(null);
         add(parentPanel);
 
+        //panel that contains the table
         JPanel panel = new JPanel();
         panel.setBounds(300,20,700,250);
         parentPanel.add(panel);
@@ -59,9 +68,12 @@ public class UpdateCustomerContactNoGUI extends JDialog{
 
         JButton button = new JButton(" Confirm ");
         button.setBounds(10, 140, 165, 25);
+
+        //handles the contact number update and UI refresh after
         button.addActionListener(e -> {
             updateCustomerContactNo();
 
+            //table refresh after update
             panel.removeAll();
             panel.revalidate();
             panel.repaint();
@@ -75,12 +87,16 @@ public class UpdateCustomerContactNoGUI extends JDialog{
 
 
     }
+
+    //validates the info
+    //updates the database using the DAO
     public void updateCustomerContactNo(){
         String customerID = customerIDText.getText();
         String contactNo = contactNoText.getText();
         Customer customer = null;
         CustomerDAO cdao = new CustomerDAO();
 
+        //customer id cannot be empty or blank
         if(customerID !=null && !customerID.isBlank()){
 
             contactNoStatus.setText("");
@@ -89,10 +105,12 @@ public class UpdateCustomerContactNoGUI extends JDialog{
             int cusid = Integer.parseInt(customerID);
             customer = cdao.getCustomerByCustomerID(cusid);
 
+            //validates the contact number using a method from the customer class
             if (Customer.validateContactNumber(contactNo)){
                 contactNoStatus.setText("");
                 customerIDStatus.setText("");
 
+                //if customer exists
                 if (customer != null){
                     customer.setContactNumber(contactNo);
                     cdao.updateCustomerContact(cusid, customer);

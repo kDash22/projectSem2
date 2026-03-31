@@ -12,16 +12,20 @@ import java.util.List;
 
 public class SearchSaleGUI extends JDialog {
 
-    private JTable table;
-    private DefaultTableModel model;
-    private JScrollPane scrollPane;
+    private JTable table;//table
+    private DefaultTableModel model;//data holder
+    private JScrollPane scrollPane; // adds the scroll function
 
-    private JLabel msg = new JLabel("");
-    private JLabel customerID = new JLabel("");
-    private JLabel total = new JLabel("");
-    private JTextField textfield;
-    private JLabel date = new JLabel("");
+    private JLabel msg = new JLabel(""); //display msgs
+    private JLabel customerID = new JLabel(""); // display the customer id
+    private JLabel total = new JLabel(""); // display the total
+    private JLabel date = new JLabel("");// display the date
+    private JTextField textfield; //input field for sale id
 
+    //initialise the JDialog
+    // includes
+    // - sale id field
+    // - search button
     public SearchSaleGUI(JFrame parent){
         super(parent, " Search Sales ",true);
 
@@ -43,20 +47,29 @@ public class SearchSaleGUI extends JDialog {
 
         JButton button = new JButton("Search");
         button.setBounds(10,50,80,25);
+
+        //handles the search and table update
         button.addActionListener(e-> searchSale(panel));
         panel.add(button);
 
 
     }
+
+    //validates the entered data
+    //retrieves the data from the database
+    //displays the sale item data in a table
+
     public void searchSale(JPanel panel){
         String saleIdString = textfield.getText();
         Sale sale = null;
         SaleDAO sdao = new SaleDAO();
 
+        //sale id cannot be empty or blank
         if (saleIdString != null && !saleIdString.isBlank()){
             int saleId = Integer.parseInt(saleIdString);
             sale = sdao.getSaleBySaleID(saleId);
 
+            //refreshes the table if it is filled
             if (scrollPane != null) {
                 panel.remove(scrollPane);
                 scrollPane = null;
@@ -67,6 +80,7 @@ public class SearchSaleGUI extends JDialog {
                 panel.repaint();
             }
 
+            //if sale exists
             if(sale != null){
                 msg.setText("");
                 customerID.setText("");
@@ -77,15 +91,14 @@ public class SearchSaleGUI extends JDialog {
                 msg.setForeground(Color.black);
                 msg.setBounds(10,100,400,25);
 
-
-                if (!(sale.getCustomer() ==null)){
+                //if customer exists
+                if (!(sale.getCustomer() == null)){
                     customerID.setText("Customer ID: "+ sale.getCustomer().getCustomerID());
                     customerID.setBounds(10,130,400,25);
                 }else {
                     customerID.setText("Customer ID: Deleted Customer ");
                     customerID.setBounds(10,130,400,25);
                 }
-
 
                 total.setText("Total : "+sale.getTotal());
                 total.setBounds(10,160,400,25);
@@ -133,8 +146,6 @@ public class SearchSaleGUI extends JDialog {
                 msg.setBounds(10,100,400,25);
                 msg.setForeground(Color.red);
                 panel.add(msg);
-
-
 
             }
             panel.revalidate();

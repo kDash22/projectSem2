@@ -6,8 +6,11 @@ import salessystem.gui.salesgui.*;
 
 import javax.swing.*;
 
-public class ClerkDashboard extends JDialog {
+//provides the JDialog for clerk dashboard
+public class ClerkDashboard extends JDialog implements UserDashboard {
 
+    //initialise the JDialog
+    //includes buttons to choose
     public ClerkDashboard(JFrame parent){
         super(parent, " Clerk Dashboard ",true);
 
@@ -28,8 +31,7 @@ public class ClerkDashboard extends JDialog {
         JButton b3 = new JButton(" Manage Sales ");
         b3.setBounds(550,130,150,40);
 
-
-
+        //manages which JDialog gets activated
         b1.addActionListener(e -> openManageCustomersDialog(parent));
         b2.addActionListener(e -> openManageProductsDialog(parent));
         b3.addActionListener(e -> openManageSalesDialog(parent));
@@ -41,6 +43,17 @@ public class ClerkDashboard extends JDialog {
 
 
     }
+
+    @Override
+    public void openManageUsersDialog(JFrame parent) {
+        //not available for Clerk role
+    }
+
+    @Override
+    public void showManageUsers(JPanel panel, JFrame parent) {
+        //not available for Clerk role
+    }
+
     public void openManageCustomersDialog(JFrame parent){
         JDialog dialog = new JDialog(parent, "Manage Customers", true);
         dialog.setSize(990,300);

@@ -8,44 +8,56 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+//DAO related to handling database operations related to Sale objects
 public class SaleDAO {
 
+    //inserts a new sale into the database
+    //use a transaction to ensure both sales and sale_items tables get the relevant records inserted
     public void addSale(Sale sale){
+
         String sql = "INSERT INTO sales (customer_id, total) VALUES (?,?)";
 
         try(Connection con = DBConnection.getConnection()){
 
-            con.setAutoCommit(false);
+            con.setAutoCommit(false);//transaction to ensure atomicity
 
-            PreparedStatement ps1 = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-
-            ps1.setInt(1, sale.getCustomer().getCustomerID());
-            ps1.setDouble(2, sale.getTotal());
+            try (PreparedStatement ps1 = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
 
 
-            ps1.executeUpdate();
+                ps1.setInt(1, sale.getCustomer().getCustomerID());
+                ps1.setDouble(2, sale.getTotal());
 
-            ResultSet rs1 = ps1.getGeneratedKeys();
+
+                ps1.executeUpdate();
+
+                ResultSet rs1 = ps1.getGeneratedKeys();
 
 
-            if(rs1.next()){
-                int saleID = rs1.getInt(1);
-                sale.setSaleID(saleID);
+                if (rs1.next()) {
 
-                SaleItemDAO sidao = new SaleItemDAO();
+                    int saleID = rs1.getInt(1);
+                    sale.setSaleID(saleID); //sets the sale id
 
-                //sale_items inserts
-                for (SaleItem item : sale.getSaleItems()){
-                    sidao.addSaleItem(con, saleID, item);
+                    SaleItemDAO sidao = new SaleItemDAO(); // used for inserting the sale items into the database
+
+                    //sale_items inserts
+                    for (SaleItem item : sale.getSaleItems()) {
+                        sidao.addSaleItem(con, saleID, item);
+                    }
                 }
+                con.commit();
+
+            } catch (SQLException e) {
+                con.rollback(); //only commits if both actions are successfully
+                throw new RuntimeException(" Error (transaction fail) occurred while adding Sales ! ",e);
             }
-            con.commit();
 
         } catch (SQLException e) {
             throw new RuntimeException(" Error occurred while adding sale ! ",e);
         }
     }
 
+    //searches for a sale using sale id
     public Sale getSaleBySaleID(int saleID){
 
         String sql = "SELECT * FROM sales WHERE sale_id = ?";
@@ -60,6 +72,7 @@ public class SaleDAO {
 
                 //retrieving the customer needed to create the sale object from the customer table
                 CustomerDAO cdao = new CustomerDAO();
+
                 Customer customer = cdao.getCustomerByCustomerID(rs.getInt("customer_id"));
 
                  Sale sale = new Sale(
@@ -69,8 +82,9 @@ public class SaleDAO {
                         rs.getDouble("total")
                         );
 
-                //fetching the items related to the saleID from the sale_items table
+                //to the items related to the saleID from the sale_items table
                 SaleItemDAO sidao = new SaleItemDAO();
+
                 List<SaleItem> saleItems= sidao.getSaleItemsBySaleID(saleID);
 
                 for(SaleItem saleItem : saleItems){
@@ -86,6 +100,7 @@ public class SaleDAO {
         return null;
     }
 
+    //returns all the sales in the databse
     public List<Sale> getAllSales(){
 
         List<Sale> sales = new ArrayList<>();
@@ -96,13 +111,13 @@ public class SaleDAO {
             PreparedStatement ps = con.prepareStatement(sql);
             ResultSet rs = ps.executeQuery()
         ){
-            //retrieving the customer needed to create the sale object from the customer table
+            //to retrieve the customer needed to create the sale object from the customer table
             CustomerDAO cdao = new CustomerDAO();
-            //fetching the items related to the saleID from the sale_items table
+
+            //to retrieve the items related to the saleID from the sale_items table
             SaleItemDAO sidao = new SaleItemDAO();
 
             while(rs.next()){
-
 
                 Customer customer = cdao.getCustomerByCustomerID(rs.getInt("customer_id"));
                 int saleID = rs.getInt("sale_id");
@@ -127,6 +142,7 @@ public class SaleDAO {
         return sales;
     }
 
+    //delete sale
     public void deleteSale(int saleID){
 
         String sql = "DELETE FROM sales WHERE sale_id = ?";
@@ -142,22 +158,4 @@ public class SaleDAO {
 
     }
 
-    //no need for other update methods as other columns are permanent
-    public boolean updateTotal(int saleID, double total){
-        String sql = "UPDATE sales SET total = ? WHERE sale_id = ? ";
-
-        try(Connection con = DBConnection.getConnection();
-            PreparedStatement ps = con.prepareStatement(sql)){
-
-            ps.setDouble(1,total);
-            ps.setInt(2,saleID);
-
-            int rows = ps.executeUpdate();
-
-            return rows>0;
-        } catch (SQLException e) {
-            throw new RuntimeException(" Error occurred while updating total ! ",e);
-        }
-
-    }
 }

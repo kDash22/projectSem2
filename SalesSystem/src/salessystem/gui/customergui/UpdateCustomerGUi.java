@@ -6,26 +6,35 @@ import salessystem.model.Customer;
 import javax.swing.*;
 import java.awt.*;
 
+//provides the JDialog for updating the customer
 public class UpdateCustomerGUi extends JDialog {
 
-    private final JTextField customerIDText;
-    private final JLabel customerIDStatus;
-    private final JTextField nameText;
-    private final JLabel nameStatus;
-    private final JTextField contactNoText;
-    private final JLabel contactNoStatus;
+    private final JTextField customerIDText;//customer id input field
+    private final JLabel customerIDStatus;//displays errors regarding customer id
+    private final JTextField nameText;// input field for customer name
+    private final JLabel nameStatus;// displays errors regarding the name
+    private final JTextField contactNoText;// input field for the contact number
+    private final JLabel contactNoStatus;//displays errors regarding the contact number
 
+    //initialise the JDialog
+    //includes
+    // - customer info form (left)
+    // - customer table (right)
+    // -  confirm button
     public UpdateCustomerGUi(JFrame parent){
+
         super(parent, "Update Customer ", true);
 
         setSize(1000, 400);
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
+        //main panel
         JPanel parentPanel = new JPanel();
         parentPanel.setLayout(null);
         add(parentPanel);
 
+        //table panel
         JPanel panel = new JPanel();
         panel.setBounds(300,20,700,250);
         parentPanel.add(panel);
@@ -76,9 +85,12 @@ public class UpdateCustomerGUi extends JDialog {
 
         JButton button = new JButton(" Confirm ");
         button.setBounds(10, 200, 165, 25);
+
+        //handles the updating and UI refresh
         button.addActionListener(e -> {
             updateCustomer();
 
+            //table refresh
             panel.removeAll();
             panel.revalidate();
             panel.repaint();
@@ -88,6 +100,8 @@ public class UpdateCustomerGUi extends JDialog {
 
     }
 
+    //validate info
+    //updates the database using the DAO
     public void updateCustomer(){
         String customerID = customerIDText.getText();
         String name = nameText.getText();
@@ -95,19 +109,20 @@ public class UpdateCustomerGUi extends JDialog {
         Customer customer = null;
         CustomerDAO cdao = new CustomerDAO();
 
+        //name cannot be empty or blank
         if (name != null && !name.isBlank()){
             nameStatus.setText("");
         }else {
             nameStatus.setText(" Name cannot be empty ! ");
         }
+        //contact number cannot be empty or blank
         if (contactNo != null && !contactNo.isBlank()){
             contactNoStatus.setText("");
         }else {
             contactNoStatus.setText(" Contact number cannot be empty ! ");
         }
 
-
-
+        //if customer id is not blank or not empty
         if(customerID !=null && !customerID.isBlank()){
             contactNoStatus.setText("");
             customerIDStatus.setText("");
@@ -115,10 +130,12 @@ public class UpdateCustomerGUi extends JDialog {
             int cusid = Integer.parseInt(customerID);
             customer = cdao.getCustomerByCustomerID(cusid);
 
+            //validates contact number using a method from customer class
             if (Customer.validateContactNumber(contactNo)){
                 contactNoStatus.setText("");
                 customerIDStatus.setText("");
 
+                //customer cannot be null and name cannot be empty or blank
                 if (customer != null && name != null && !name.isBlank()){
                     customer.setContactNumber(contactNo);
                     customer.setName(name);
