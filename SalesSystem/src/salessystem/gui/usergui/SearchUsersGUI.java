@@ -91,7 +91,10 @@ public class SearchUsersGUI extends JDialog {
         //if choice is search by userid
         if (choice == 0 ){
             field = textfield.getText();
-            user = udao.getUserByUserID(Integer.parseInt(field));
+            try{
+            user = udao.getUserByUserID(Integer.parseInt(field));} catch (NumberFormatException e) {
+                msg.setText(" User id can only be an integer ! ");
+            }
         }
 
         //if user exists

@@ -38,7 +38,7 @@ public class AddNewUserGUI extends JDialog {
 
         //table panel
         JPanel panel = new JPanel();
-        panel.setBounds(300, 20, 550,250);
+        panel.setBounds(300, 20, 550,180);
         parentPanel.add(panel);
 
         panel.removeAll();
@@ -83,7 +83,7 @@ public class AddNewUserGUI extends JDialog {
         parentPanel.add(confirmPasswordField);
 
         JButton button = new JButton(" Confirm ");
-        button.setBounds(10, 225, 165, 25);
+        button.setBounds(10, 265, 165, 25);
 
         //handles insertion and UI refresh
         button.addActionListener(e -> {
@@ -99,7 +99,7 @@ public class AddNewUserGUI extends JDialog {
         parentPanel.add(button);
 
         passwordStatus = new JLabel("");
-        passwordStatus.setBounds(10, 170, 400, 50);
+        passwordStatus.setBounds(10, 210, 800, 50);
         passwordStatus.setForeground(Color.red);
         parentPanel.add(passwordStatus);
 
@@ -128,7 +128,7 @@ public class AddNewUserGUI extends JDialog {
                 passwordStatus.setText(" Passwords do not match ! ");
                 confirmPasswordField.setText("");
             }
-            passwordStatus.setText("");
+
 
         } else {
             if (password.length > 8){

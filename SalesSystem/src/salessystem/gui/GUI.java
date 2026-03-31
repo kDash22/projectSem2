@@ -17,6 +17,7 @@ public class GUI extends JFrame {
 
         setSize(1280,720);
         setDefaultCloseOperation(JDialog.EXIT_ON_CLOSE);
+        setTitle("Sales Management System");
 
         JButton button = new JButton(Global.companyName);
         button.setBounds(10,110,80,25);

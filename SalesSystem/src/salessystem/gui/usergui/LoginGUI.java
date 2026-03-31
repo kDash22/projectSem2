@@ -80,17 +80,22 @@ public class LoginGUI extends JDialog {
         }
 
         UserDAO udao = new UserDAO();
-        User user = udao.getUserByUsername(username);
+        User user = null;
+        try{
+            user = udao.getUserByUsername(username);
+        } catch (RuntimeException e) {
+            JOptionPane.showMessageDialog(this, " Database connection failed ! \nEnsure database is running ! ");
+        }
+
 
         //if user exists
         if (user != null){
             status.setText("");
             if(user.getPassword().equals(new String(password))) {
-               JOptionPane.showMessageDialog(this, " Login Successful ! ");
 
-               authentication = true;
-               loggedUser = user;
-               dispose();
+                JOptionPane.showMessageDialog(this, " Login Successful ! ");
+                authentication = true;
+                loggedUser = user;dispose();
 
             } else {
                 passwordField.setText("");

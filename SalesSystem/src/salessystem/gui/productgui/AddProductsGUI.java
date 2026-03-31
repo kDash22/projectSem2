@@ -37,7 +37,7 @@ public class AddProductsGUI extends JDialog {
 
         //table panel
         JPanel panel = new JPanel();
-        panel.setBounds(300,20,700,250);
+        panel.setBounds(400,20,700,250);
         parentPanel.add(panel);
 
         panel.removeAll();
@@ -111,11 +111,21 @@ public class AddProductsGUI extends JDialog {
 
         String priceString = priceText.getText();
         boolean priceCheck = false;
-        double price = Double.parseDouble(priceString);
+        double price;
+        try{
+            price = Double.parseDouble(priceString);
+        } catch (NumberFormatException e) {
+            priceStatus.setText(" Input only numbers ! ");
+        }
 
         String stockString = stockText.getText();
         boolean stockCheck = false;
-        double stock = Double.parseDouble(stockString);
+        double stock;
+        try {
+            stock = Double.parseDouble(stockString);
+        } catch (NumberFormatException e) {
+            stockStatus.setText("Input only numbers ! ");
+        }
 
         //name cannot be empty or blank
         if (name !=null && !name.isBlank()){
@@ -168,7 +178,11 @@ public class AddProductsGUI extends JDialog {
                     options[1]
             );
             if (choice == 0){
-                product = new Product(name, UnitType.PIECE, price, stock);
+                try{
+                    product = new Product(name, UnitType.PIECE, price, stock);
+                } catch (IllegalArgumentException e) {
+                    stockStatus.setText("for piece type units the stock must be a whole number");
+                }
                 pdao.addProduct(product);
                 JOptionPane.showMessageDialog(this, " Product (PIECE) Added Successfully ! ");
                 nameText.setText("");
