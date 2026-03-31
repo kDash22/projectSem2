@@ -9,9 +9,6 @@ import java.util.List;
 
 public class GetAllUserGUI extends JDialog {
 
-    private JTable table;
-    private DefaultTableModel model;
-
     public GetAllUserGUI(JFrame parent){
         super(parent, "All Users", true);
 
@@ -24,10 +21,13 @@ public class GetAllUserGUI extends JDialog {
         panel.setLayout(null);
         add(panel);
 
+        UserTable(panel);
+    }
+    public static void UserTable(JPanel panel){
         String[] columns = {" User ID ", " First Name ", " Last Name ", " Username ", " Role " };
-        model = new DefaultTableModel(columns, 0);
+        DefaultTableModel model = new DefaultTableModel(columns, 0);
 
-        table = new JTable(model);
+        JTable table = new JTable(model);
 
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBounds(10,10,550,250);
@@ -48,7 +48,6 @@ public class GetAllUserGUI extends JDialog {
             };
             model.addRow(row);
         }
-
 
     }
 }

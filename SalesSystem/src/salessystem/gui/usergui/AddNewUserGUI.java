@@ -22,61 +22,78 @@ public class AddNewUserGUI extends JDialog {
     public AddNewUserGUI(JFrame parent) {
         super(parent, "Add New User", true);
 
-        setSize(600, 300);
+        setSize(800, 400);
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
+        JPanel parentPanel = new JPanel();
+        parentPanel.setLayout(null);
+        add(parentPanel);
+
         JPanel panel = new JPanel();
-        panel.setLayout(null);
-        add(panel);
+        panel.setBounds(300, 20, 550,250);
+        parentPanel.add(panel);
+
+        panel.removeAll();
+        GetAllUserGUI.UserTable(panel);
+
 
         JLabel firstName = new JLabel("First Name ");
-        firstName.setBounds(10, 20, 80, 30);
-        panel.add(firstName);
+        firstName.setBounds(10, 20, 120, 30);
+        parentPanel.add(firstName);
 
         firstNameText = new JTextField(25);
-        firstNameText.setBounds(100, 20, 165, 25);
-        panel.add(firstNameText);
+        firstNameText.setBounds(140, 20, 165, 25);
+        parentPanel.add(firstNameText);
 
         JLabel lastName = new JLabel("Last Name ");
-        lastName.setBounds(10, 50, 80, 30);
-        panel.add(lastName);
+        lastName.setBounds(10, 50, 120, 30);
+        parentPanel.add(lastName);
 
         lastNameText = new JTextField(25);
-        lastNameText.setBounds(100, 50, 165, 25);
-        panel.add(lastNameText);
+        lastNameText.setBounds(140, 50, 165, 25);
+        parentPanel.add(lastNameText);
 
         nameStatus = new JLabel("");
         nameStatus.setBounds(10, 80, 200, 30);
         nameStatus.setForeground(Color.red);
-        panel.add(nameStatus);
+        parentPanel.add(nameStatus);
 
 
         JLabel password = new JLabel(" Password ");
-        password.setBounds(10, 110, 80, 30);
-        panel.add(password);
+        password.setBounds(10, 110, 120, 30);
+        parentPanel.add(password);
 
         passwordField = new JPasswordField(25);
-        passwordField.setBounds(100, 110, 165, 25);
-        panel.add(passwordField);
+        passwordField.setBounds(140, 110, 165, 25);
+        parentPanel.add(passwordField);
 
-        JLabel confirmPassword = new JLabel(" Password ");
-        confirmPassword.setBounds(10, 140, 80, 30);
-        panel.add(confirmPassword);
+        JLabel confirmPassword = new JLabel("Confirm Password ");
+        confirmPassword.setBounds(10, 140, 120, 30);
+        parentPanel.add(confirmPassword);
 
         confirmPasswordField = new JPasswordField(25);
-        confirmPasswordField.setBounds(100, 140, 165, 25);
-        panel.add(confirmPasswordField);
+        confirmPasswordField.setBounds(140, 140, 165, 25);
+        parentPanel.add(confirmPasswordField);
 
         JButton button = new JButton(" Confirm ");
         button.setBounds(10, 225, 165, 25);
-        button.addActionListener(e -> newUser());
-        panel.add(button);
+        button.addActionListener(e -> {
+            newUser();
+
+            panel.removeAll();
+            panel.revalidate();
+            panel.repaint();
+            GetAllUserGUI.UserTable(panel);
+
+        });
+        parentPanel.add(button);
 
         passwordStatus = new JLabel("");
-        passwordStatus.setBounds(10, 170, 600, 50);
+        passwordStatus.setBounds(10, 170, 400, 50);
         passwordStatus.setForeground(Color.red);
-        panel.add(passwordStatus);
+        parentPanel.add(passwordStatus);
+
 
     }
 
@@ -154,13 +171,20 @@ public class AddNewUserGUI extends JDialog {
                 user = new Admin(firstName, lastName, new String(password));
                 udao.addUser(user);
                 JOptionPane.showMessageDialog(this, "New Admin Created Successfully ! ");
-                dispose();
+                confirmPasswordField.setText("");
+                passwordField.setText("");
+                firstNameText.setText("");
+                lastNameText.setText("");
+
 
             } else if (choice == 1) {
                 user = new Clerk(firstName, lastName, new String(password));
                 udao.addUser(user);
                 JOptionPane.showMessageDialog(this, "New Clerk Created Successfully ! ");
-                dispose();
+                confirmPasswordField.setText("");
+                passwordField.setText("");
+                firstNameText.setText("");
+                lastNameText.setText("");
 
             }
 

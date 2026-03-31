@@ -8,8 +8,6 @@ import javax.swing.table.DefaultTableModel;
 import java.util.List;
 
 public class GetAllProductsGUI extends JDialog {
-    private JTable table;
-    private DefaultTableModel model;
 
     public GetAllProductsGUI(JFrame parent ){
 
@@ -24,10 +22,16 @@ public class GetAllProductsGUI extends JDialog {
         panel.setLayout(null);
         add(panel);
 
-        String[] columns = {" Product ID ", " Product Name ", " Unit type ", " Price ", " Stock "};
-        model = new DefaultTableModel(columns, 0);
+        productsTable(panel);
 
-        table = new JTable(model);
+
+
+    }
+    public static void productsTable(JPanel panel){
+        String[] columns = {" Product ID ", " Product Name ", " Unit type ", " Price ", " Stock "};
+        DefaultTableModel model = new DefaultTableModel(columns, 0);
+
+        JTable table = new JTable(model);
 
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBounds(10,10,550,250);
@@ -43,11 +47,10 @@ public class GetAllProductsGUI extends JDialog {
                     product.getProductId(),
                     product.getProductName(),
                     product.getUnitType().name(),
-                    product.getPrice(),
+                    "Rs."+" "+product.getPrice(),
                     product.getStock()
             };
             model.addRow(row);
         }
-
     }
 }

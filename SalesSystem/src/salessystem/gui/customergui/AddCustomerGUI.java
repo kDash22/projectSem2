@@ -1,6 +1,7 @@
 package salessystem.gui.customergui;
 
 import salessystem.dao.CustomerDAO;
+import salessystem.gui.usergui.GetAllUserGUI;
 import salessystem.model.Customer;
 
 import javax.swing.*;
@@ -14,46 +15,62 @@ public class AddCustomerGUI extends JDialog {
     private final JLabel nameStatus;
 
     public AddCustomerGUI(JFrame parent){
-        super(parent, "Add New User", true);
+        super(parent, "Add New Customer", true);
 
-        setSize(600, 300);
+        setSize(1000, 300);
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
+        JPanel parentPanel = new JPanel();
+        parentPanel.setLayout(null);
+        add(parentPanel);
+
         JPanel panel = new JPanel();
-        panel.setLayout(null);
-        add(panel);
+        panel.setBounds(300,20,700,250);
+        parentPanel.add(panel);
+
+        panel.removeAll();
+        GetAllCustomersGUI.customerTable(panel);
 
         JLabel firstName = new JLabel("Customer Name ");
         firstName.setBounds(10, 20, 120, 30);
-        panel.add(firstName);
+        parentPanel.add(firstName);
+
+
 
         nameText = new JTextField(25);
         nameText.setBounds(140, 20, 165, 25);
-        panel.add(nameText);
+        parentPanel.add(nameText);
 
         nameStatus = new JLabel("");
         nameStatus.setBounds(10, 50, 500, 30);
         nameStatus.setForeground(Color.red);
-        panel.add(nameStatus);
+        parentPanel.add(nameStatus);
 
         JLabel contactNo = new JLabel("Contact Number ");
         contactNo.setBounds(10, 80, 120, 30);
-        panel.add(contactNo);
+        parentPanel.add(contactNo);
 
         contactNoText = new JTextField(25);
         contactNoText.setBounds(140, 80, 165, 25);
-        panel.add(contactNoText);
+        parentPanel.add(contactNoText);
 
         contactNoStatus = new JLabel("");
         contactNoStatus.setBounds(10, 110, 500, 30);
         contactNoStatus.setForeground(Color.red);
-        panel.add(contactNoStatus);
+        parentPanel.add(contactNoStatus);
 
         JButton button = new JButton(" Confirm ");
         button.setBounds(10, 150, 165, 25);
-        button.addActionListener(e -> newCustomer());
-        panel.add(button);
+        button.addActionListener(e -> {
+            newCustomer();
+            panel.removeAll();
+            panel.revalidate();
+            panel.repaint();
+            GetAllCustomersGUI.customerTable(panel);
+
+        });
+        parentPanel.add(button);
 
 
     }
@@ -80,13 +97,13 @@ public class AddCustomerGUI extends JDialog {
             CustomerDAO cdao = new CustomerDAO();
             cdao.addCustomer(customer);
             JOptionPane.showMessageDialog(this, " New Customer Created Successfully ! ");
-            dispose();
+            contactNoText.setText("");
+            nameText.setText("");
 
         }else {
             JOptionPane.showMessageDialog(this, " Error ! ");
             contactNoText.setText("");
             nameText.setText("");
-
         }
 
     }

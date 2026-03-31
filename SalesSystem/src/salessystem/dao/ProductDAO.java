@@ -1,7 +1,6 @@
 package salessystem.dao;
 
 
-import salessystem.GlobalMethods;
 import salessystem.database.DBConnection;
 import salessystem.model.Product;
 import salessystem.model.UnitType;
@@ -10,8 +9,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+//DAO related to handling database operations related to Product objects
 public class ProductDAO {
 
+    //inserts a new product into the database
     public void addProduct(Product product){
 
         String sql = "INSERT INTO products ( product_name, price, stock, unit_type) VALUES (?,?,?,?)";
@@ -27,16 +28,18 @@ public class ProductDAO {
             ps.executeUpdate();
 
             ResultSet rs = ps.getGeneratedKeys();
+
             if (rs.next()) {
-                product.setProductId(rs.getInt(1));
+
+                product.setProductId(rs.getInt(1));//sets the product id
             }
 
         } catch (SQLException e) {
             throw new RuntimeException(" Error occurred while adding product ! ",e);
         }
-
     }
 
+    //searches for a product using the product id
     public Product getProductByProductID(int productID){
         String sql = "SELECT * FROM products WHERE product_id = ? ";
 
@@ -63,6 +66,7 @@ public class ProductDAO {
         return null;
     }
 
+    //returns all the products in the database
     public List<Product> getAllProducts(){
         List<Product> products = new ArrayList<>();
         String sql = "SELECT * FROM products";

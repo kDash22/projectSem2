@@ -1,13 +1,13 @@
 package salessystem.model;
 
+//This class lays the basic framework for users, can be extended for adding new user types
+//The child class that extends this class is taken as the role allowing role based access
 public abstract class User {
     protected String firstName;
     protected String lastName;
     private int userID;
     private String userName;
     private String password;
-
-    abstract void displayRole();
 
     //getters
 
@@ -52,20 +52,14 @@ public abstract class User {
         } 
         this.password = password;
     }
+
+    //This method sets the username automatically, the user cannot change the username.
     public final void createUserName(){
+
         this.userName = getLastName().trim().toLowerCase() + getUserID();
     }
 
-    public final void changePassword(String currentPassword, String newPassword) { 
-        if (!currentPassword.equals(getPassword())) {
-            System.out.println("Incorrect current password!!!");
-        }
-        else{
-            setPassword(newPassword);
-            System.out.println("Password changed successfully.");}
-
-    }
-    //for new users, the database will set the userID
+    //for making new users, the database will set the userID with auto increment.
     public User(String firstName, String lastName, String password){
 
         setFirstName(firstName);
@@ -76,6 +70,7 @@ public abstract class User {
 
     //for retrieving old users from the database
     public User(int userID,String firstName, String lastName, String userName, String password){
+
         this(firstName,lastName,password);
         this.userID = userID;
         this.userName = userName;
@@ -83,6 +78,7 @@ public abstract class User {
 
     @Override
     public String toString(){
+
         String tag = "\nName : "+getFirstName()+" "+getLastName();
         tag += "\nUser ID : "+ getUserID();
         tag += "\nUserName : "+getUserName();
@@ -90,7 +86,7 @@ public abstract class User {
         return tag;
     }
 
-     //validation
+     //Instance variable validation methods
      public void validateFirstName(String firstName){
          if(firstName == null || firstName.trim().isEmpty()){
              throw new IllegalArgumentException("First name cannot be empty");

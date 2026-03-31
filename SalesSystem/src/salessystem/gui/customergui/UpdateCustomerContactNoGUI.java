@@ -16,44 +16,61 @@ public class UpdateCustomerContactNoGUI extends JDialog{
     public UpdateCustomerContactNoGUI(JFrame parent){
         super(parent, "Update The Contact Number", true);
 
-        setSize(600, 300);
+        setSize(1000, 400);
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
+        JPanel parentPanel = new JPanel();
+        parentPanel.setLayout(null);
+        add(parentPanel);
+
         JPanel panel = new JPanel();
-        panel.setLayout(null);
-        add(panel);
+        panel.setBounds(300,20,700,250);
+        parentPanel.add(panel);
+
+        panel.removeAll();
+        GetAllCustomersGUI.customerTable(panel);
 
         JLabel customerID = new JLabel("Customer ID ");
         customerID.setBounds(10, 20, 120, 30);
-        panel.add(customerID);
+        parentPanel.add(customerID);
 
         customerIDText= new JTextField(25);
         customerIDText.setBounds(120, 20, 165, 25);
-        panel.add(customerIDText);
+        parentPanel.add(customerIDText);
 
         customerIDStatus = new JLabel("");
         customerIDStatus.setBounds(10, 50, 500, 30);
         customerIDStatus.setForeground(Color.red);
-        panel.add(customerIDStatus);
+        parentPanel.add(customerIDStatus);
 
         JLabel ContactNo = new JLabel("Contact Number ");
         ContactNo.setBounds(10, 80, 120, 30);
-        panel.add(ContactNo);
+        parentPanel.add(ContactNo);
 
         contactNoText = new JTextField(25);
         contactNoText.setBounds(120, 80, 165, 25);
-        panel.add(contactNoText);
+        parentPanel.add(contactNoText);
 
         contactNoStatus = new JLabel("");
         contactNoStatus.setBounds(10, 110, 500, 30);
         contactNoStatus.setForeground(Color.red);
-        panel.add(contactNoStatus);
+        parentPanel.add(contactNoStatus);
 
         JButton button = new JButton(" Confirm ");
         button.setBounds(10, 140, 165, 25);
-        button.addActionListener(e -> updateCustomerContactNo());
-        panel.add(button);
+        button.addActionListener(e -> {
+            updateCustomerContactNo();
+
+            panel.removeAll();
+            panel.revalidate();
+            panel.repaint();
+
+            GetAllCustomersGUI.customerTable(panel);
+
+        });
+
+        parentPanel.add(button);
 
 
 

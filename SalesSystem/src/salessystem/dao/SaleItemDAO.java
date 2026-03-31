@@ -4,10 +4,7 @@ import salessystem.database.DBConnection;
 import salessystem.model.Product;
 import salessystem.model.SaleItem;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +15,7 @@ public class SaleItemDAO {
         String sql = "INSERT INTO sale_items (sale_id, product_id, quantity, subtotal) VALUES (?,?,?,?)";
 
 
-        PreparedStatement ps = connection.prepareStatement(sql);
+        PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
         ps.setInt(1, saleID);
         ps.setInt(2, saleItem.getProduct().getProductId());
@@ -26,6 +23,12 @@ public class SaleItemDAO {
         ps.setDouble(4, saleItem.getSubtotal());
 
         ps.executeUpdate();
+        ResultSet rs = ps.getGeneratedKeys();
+
+        if (rs.next()) {
+
+            saleItem.setSaleItemID(rs.getInt(1));//sets the sale item id
+        }
 
     }
 
@@ -34,7 +37,7 @@ public class SaleItemDAO {
         String sql = "SELECT * FROM sale_items WHERE sale_item_id = ?";
 
         try(Connection con = DBConnection.getConnection();
-            PreparedStatement ps = con.prepareStatement(sql)){
+            PreparedStatement ps = con.prepareStatement(sql )){
 
             ps.setInt(1,saleItemID);
             ResultSet rs = ps.executeQuery();
@@ -121,7 +124,7 @@ public class SaleItemDAO {
                 SaleItem saleItem = new SaleItem(
                         rs.getInt("sale_item_id"),
                         product,
-                        rs.getInt("quantity"),
+                        rs.getDouble("quantity"),
                         rs.getDouble("subtotal")
                 );
                 saleItems.add(saleItem);

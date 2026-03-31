@@ -1,5 +1,6 @@
 package salessystem.gui.usergui;
 
+import salessystem.Global;
 import salessystem.dao.UserDAO;
 import salessystem.model.User;
 
@@ -10,6 +11,7 @@ public class LoginGUI extends JDialog {
 
     private boolean authentication = false;
     private User loggedUser;
+    private boolean rootAccess;
 
     private JTextField textfield;
     private JPasswordField passwordField;
@@ -18,7 +20,7 @@ public class LoginGUI extends JDialog {
     public LoginGUI(JFrame parent) {
         super(parent, "Login", true);
 
-        setSize(350, 200);
+        setSize(600, 300);
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
@@ -44,7 +46,9 @@ public class LoginGUI extends JDialog {
 
         JButton button = new JButton("Login");
         button.setBounds(10,110,80,25);
-        button.addActionListener(e-> verifyLogin());
+        button.addActionListener(e-> {
+            verifyLogin();
+        });
         panel.add(button);
 
         status = new JLabel("");
@@ -57,6 +61,13 @@ public class LoginGUI extends JDialog {
     private void verifyLogin() {
         String username = textfield.getText();
         char[] password = passwordField.getPassword();
+
+        if(Global.rootPassword.equals(new String(password)) && Global.rootUser.equals(username)) {
+            JOptionPane.showMessageDialog(this, " Welcome Mr.Stark ! ");
+            authentication = true;
+            rootAccess = true;
+            dispose();
+        }
 
         UserDAO udao = new UserDAO();
         User user = udao.getUserByUsername(username);
@@ -86,5 +97,9 @@ public class LoginGUI extends JDialog {
 
     public User getLoggedUser(){
         return loggedUser;
+    }
+
+    public boolean getRootAccess(){
+        return rootAccess;
     }
 }
