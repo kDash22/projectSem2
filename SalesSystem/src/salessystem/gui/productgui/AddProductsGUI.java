@@ -111,7 +111,7 @@ public class AddProductsGUI extends JDialog {
 
         String priceString = priceText.getText();
         boolean priceCheck = false;
-        double price;
+        double price = -1;
         try{
             price = Double.parseDouble(priceString);
         } catch (NumberFormatException e) {
@@ -120,7 +120,7 @@ public class AddProductsGUI extends JDialog {
 
         String stockString = stockText.getText();
         boolean stockCheck = false;
-        double stock;
+        double stock = -1;
         try {
             stock = Double.parseDouble(stockString);
         } catch (NumberFormatException e) {
