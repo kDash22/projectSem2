@@ -8,12 +8,14 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 
+//provides the JDialog
 public class GetAllSalesGUI extends JDialog {
 
+    //initialise the JDialog
+    //incluedes the sales table
     public GetAllSalesGUI(JFrame parent ){
 
         super(parent, "All Sales", true);
-
 
         setSize(600, 300);
         setLocationRelativeTo(parent);
@@ -25,9 +27,9 @@ public class GetAllSalesGUI extends JDialog {
 
         salesTable(panel);
 
-
-
     }
+
+    //method that makes the table
     public static void salesTable(JPanel panel){
         String[] columns = {" Sale ID ", " Customer ID ", "Customer Name", " Date ", "total"};
         DefaultTableModel model = new DefaultTableModel(columns, 0);

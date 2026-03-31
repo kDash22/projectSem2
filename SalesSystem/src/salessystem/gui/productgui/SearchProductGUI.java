@@ -6,16 +6,21 @@ import salessystem.model.Product;
 import javax.swing.*;
 import java.awt.*;
 
+//provides the JDialog for searching products
 public class SearchProductGUI extends JDialog {
 
-    private final JTextField textfield;
-    private JLabel msg = new JLabel("");
-    private JLabel productID = new JLabel("");
-    private JLabel productName = new JLabel("");
-    private JLabel price = new JLabel("");
-    private JLabel stock = new JLabel("");
-    private JLabel unitType = new JLabel("");
+    private final JTextField textfield; // input field for prouct id
+    private JLabel msg = new JLabel("");//displays erros
+    private JLabel productID = new JLabel("");// displays the product id
+    private JLabel productName = new JLabel("");//displays the product name
+    private JLabel price = new JLabel("");//displays the product price
+    private JLabel stock = new JLabel("");//displays the product stock
+    private JLabel unitType = new JLabel("");//displays the unit type
 
+    //initalise the JDialog
+    //includes
+    // - product id field
+    // - search button
     public SearchProductGUI(JFrame parent){
 
         super(parent, " Search Products ",true);
@@ -44,16 +49,20 @@ public class SearchProductGUI extends JDialog {
 
     }
 
+    //validates info
+    //retrieves data from the database
     public void searchProduct(JPanel panel){
 
         String prodID = textfield.getText();
         Product product = null;
         ProductDAO pdao = new ProductDAO();
 
+        //product id cannot be empty or blank
         if (prodID != null && !prodID.isBlank()){
             int prodId = Integer.parseInt(prodID);
             product = pdao.getProductByProductID(prodId);}
 
+        //if product exists
         if(product != null){
 
             msg.setText("");

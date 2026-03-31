@@ -7,15 +7,17 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 
+//provides the JDialog
 public class GetAllSaleItemsGUI extends JDialog{
 
-    private JTable table;
-    private DefaultTableModel model;
+    private JTable table; //table
+    private DefaultTableModel model;//data holder
 
+    //initialise the JDialog
+    //includes the sale items table
     public GetAllSaleItemsGUI(JFrame parent) {
 
         super(parent, "All Sale Items", true);
-
 
         setSize(600, 300);
         setLocationRelativeTo(parent);

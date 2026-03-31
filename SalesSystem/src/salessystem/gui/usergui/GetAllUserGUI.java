@@ -7,11 +7,13 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 
+//provides JDialog
 public class GetAllUserGUI extends JDialog {
 
+    //initalise the JDialog
+    //included the user table
     public GetAllUserGUI(JFrame parent){
         super(parent, "All Users", true);
-
 
         setSize(600, 300);
         setLocationRelativeTo(parent);
@@ -23,6 +25,8 @@ public class GetAllUserGUI extends JDialog {
 
         UserTable(panel);
     }
+
+    //method that creates the table
     public static void UserTable(JPanel panel){
         String[] columns = {" User ID ", " First Name ", " Last Name ", " Username ", " Role " };
         DefaultTableModel model = new DefaultTableModel(columns, 0);

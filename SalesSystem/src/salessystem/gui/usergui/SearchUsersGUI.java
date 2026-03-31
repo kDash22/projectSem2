@@ -6,23 +6,27 @@ import salessystem.model.User;
 import javax.swing.*;
 import java.awt.*;
 
+//provides JDialog for searching users
 public class SearchUsersGUI extends JDialog {
-    private JLabel usernameLabel = new JLabel("");
-    private JLabel msg = new JLabel("");
-    private JLabel name = new JLabel("");
-    private JLabel userID = new JLabel("");
-    private JTextField textfield;
-    private JPasswordField passwordField;
-    private JLabel status;
-    private int choice;
 
+    private JLabel usernameLabel = new JLabel("");//display username
+    private JLabel msg = new JLabel("");//dislay msgs
+    private JLabel name = new JLabel("");//display name
+    private JLabel userID = new JLabel("");//display user id
+    private JTextField textfield;//enter username or userid
+    private int choice;//choice of searching by username or user id
+
+    //initalise the JDialog
+    //includes
+    // - username or userid field
+    // - search button
     public SearchUsersGUI(JFrame parent){
         super(parent, "Search Users",true);
 
         String[] options = { "By User ID", "By Username"};
 
         choice = JOptionPane.showOptionDialog(
-                //checks role
+                //checks search method
                 null,
                 "Select Search method",
                 "Search method Selection",
@@ -60,6 +64,8 @@ public class SearchUsersGUI extends JDialog {
 
         JButton button = new JButton("Search");
         button.setBounds(10,80,80,25);
+
+        //handles search
         button.addActionListener(e-> searchUser(panel));
         panel.add(button);
 
@@ -69,21 +75,29 @@ public class SearchUsersGUI extends JDialog {
         return choice;
     }
 
+    //validates given info
+    //searches the database using the DAO
     public void searchUser(JPanel panel){
         
         String field;
         User user = null;
         UserDAO udao = new UserDAO();
-        
+
+        //if choice is search by username
         if (choice == 1 ){
             field = textfield.getText();
             user = udao.getUserByUsername(field);
         }
+        //if choice is search by userid
         if (choice == 0 ){
             field = textfield.getText();
-            user = udao.getUserByUserID(Integer.parseInt(field));
+            try{
+            user = udao.getUserByUserID(Integer.parseInt(field));} catch (NumberFormatException e) {
+                msg.setText(" User id can only be an integer ! ");
+            }
         }
-        
+
+        //if user exists
         if (user!=null){
 
             msg.setText("");

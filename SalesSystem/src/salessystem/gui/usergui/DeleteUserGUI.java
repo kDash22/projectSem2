@@ -6,11 +6,16 @@ import salessystem.model.User;
 import javax.swing.*;
 import java.awt.*;
 
+//provides the JDialog for deleting a user
 public class DeleteUserGUI extends JDialog {
 
-    private final JTextField textfield;
-    private final JLabel UserNameStatus;
+    private final JTextField textfield;//input field for username
+    private final JLabel UserNameStatus;//display errors
 
+    //initalise the JDialog
+    //includes
+    // - username input field
+    // - confirm button
     public DeleteUserGUI(JFrame parent){
         super(parent, "Delete User",true);
 
@@ -37,13 +42,18 @@ public class DeleteUserGUI extends JDialog {
 
         JButton button = new JButton(" Confirm ");
         button.setBounds(10, 195, 165, 25);
+
+        //handles deletion
         button.addActionListener(e -> deleteUser());
         panel.add(button);
     }
 
+    //validates the given info
+    //deletes user from the db using the DAO
     public void deleteUser(){
         String username = textfield.getText();
 
+        //username cannot be empty or blank
         if (username != null && !username.isBlank()) {
 
             username = username.trim();
@@ -52,7 +62,10 @@ public class DeleteUserGUI extends JDialog {
             UserDAO udao = new UserDAO();
             User user = udao.getUserByUsername(username);
 
+            //if user exists
             if (user != null){
+
+                //reconfirm
                 int result = JOptionPane.showConfirmDialog(
                         null,
                         "Are you sure?",
@@ -65,16 +78,11 @@ public class DeleteUserGUI extends JDialog {
                     dispose();
                 }
                 else if (result == JOptionPane.NO_OPTION) {
-
                 }
-
             }else {
                 JOptionPane.showMessageDialog(this, " User not found ! ");
                 textfield.setText("");
-
             }
-
-
         } else {
             UserNameStatus.setText(" Username cannot be blank ! ");
         }

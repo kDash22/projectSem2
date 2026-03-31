@@ -6,14 +6,20 @@ import salessystem.model.User;
 import javax.swing.*;
 import java.awt.*;
 
+//provides the JDialog to change the name of user
 public class ChangeUsersNamesGUI extends JDialog {
 
-    private final JTextField firstNameText;
-    private final JTextField lastNameText;
-    private final JTextField userIDText;
-    private final JLabel nameStatus;
-    private final JLabel UserIDStatus;
+    private final JTextField firstNameText;//input field for first name
+    private final JTextField lastNameText;//input field for last name
+    private final JTextField userIDText;//input field for user id
+    private final JLabel nameStatus;//displays errors regarding name
+    private final JLabel UserIDStatus;//displays errors regarding the user id
 
+    //initialise JDialog
+    //includes
+    // - user info form (left)
+    // - user table (right)
+    // - confirm button
     public ChangeUsersNamesGUI(JFrame parent){
         super(parent, "Change User's name", true);
 
@@ -21,10 +27,12 @@ public class ChangeUsersNamesGUI extends JDialog {
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
+        //main panel
         JPanel parentPanel = new JPanel();
         parentPanel.setLayout(null);
         add(parentPanel);
 
+        //table panel
         JPanel panel = new JPanel();
         panel.setBounds(260, 20, 550,250);
         parentPanel.add(panel);
@@ -69,27 +77,32 @@ public class ChangeUsersNamesGUI extends JDialog {
 
         JButton button = new JButton(" Confirm ");
         button.setBounds(10, 175, 165, 25);
+
+        //handles updating and UI refresh
         button.addActionListener(e -> {
             changeUsersNames();
+
+            //table refresh
             panel.removeAll();
             panel.revalidate();
             panel.repaint();
             GetAllUserGUI.UserTable(panel);
-
         });
         parentPanel.add(button);
     }
 
+    //validates the entered info
+    //updates the database using the DAO
     public void changeUsersNames(){
-            String userIDString = userIDText.getText();
-            String firstName = firstNameText.getText();
-            String lastName = lastNameText.getText();
+        String userIDString = userIDText.getText();
+        String firstName = firstNameText.getText();
+        String lastName = lastNameText.getText();
 
+        boolean nameCheck = false;
+        boolean userIDcheck = false;
+        int userID = -1;
 
-            boolean nameCheck = false;
-            boolean userIDcheck = false;
-            int userID = -1;
-
+        //user id cannot be empty or blank
         if (userIDString != null && !userIDString.isBlank()) {
 
             userID = Integer.parseInt(userIDString);
@@ -99,6 +112,7 @@ public class ChangeUsersNamesGUI extends JDialog {
             UserIDStatus.setText(" User ID cannot be blank ! ");
         }
 
+        //name cannot be empty or blank
         if (firstName != null && !firstName.isBlank()
                 && lastName != null && !lastName.isBlank()) {
 
@@ -116,10 +130,10 @@ public class ChangeUsersNamesGUI extends JDialog {
 
         }
 
+        //if all checks pass
         if (userIDcheck && nameCheck){
             UserDAO udao = new UserDAO();
             User user = udao.getUserByUserID(userID);
-
 
             if (user != null){
                 user.setFirstName(firstName);
@@ -135,10 +149,6 @@ public class ChangeUsersNamesGUI extends JDialog {
                 lastNameText.setText("");
             }
         }
-
-
-
-
 
     }
 

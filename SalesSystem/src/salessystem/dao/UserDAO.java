@@ -63,6 +63,7 @@ public class UserDAO {
                 throw new RuntimeException(" Error (transaction fail) occurred while adding user ! ",e);
 
             }
+
         } catch (SQLException e) {
             throw new RuntimeException(" Error occurred while adding user ! ",e);
         }

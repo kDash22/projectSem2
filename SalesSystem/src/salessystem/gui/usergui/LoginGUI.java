@@ -7,16 +7,21 @@ import salessystem.model.User;
 import javax.swing.*;
 import java.awt.*;
 
+//provides the JDialog for logging in
 public class LoginGUI extends JDialog {
 
-    private boolean authentication = false;
-    private User loggedUser;
-    private boolean rootAccess;
+    private boolean authentication = false;//login success check
+    private User loggedUser;//who logged in
+    private boolean rootAccess;//root access check
 
-    private JTextField textfield;
-    private JPasswordField passwordField;
-    private JLabel status;
+    private JTextField textfield;//username input field
+    private JPasswordField passwordField;//password input field
+    private JLabel status;//displays errors
 
+    //initialise the JDialog
+    //includes
+    // - username and password form
+    // - login button
     public LoginGUI(JFrame parent) {
         super(parent, "Login", true);
 
@@ -46,6 +51,8 @@ public class LoginGUI extends JDialog {
 
         JButton button = new JButton("Login");
         button.setBounds(10,110,80,25);
+
+        //handles login
         button.addActionListener(e-> {
             verifyLogin();
         });
@@ -58,10 +65,13 @@ public class LoginGUI extends JDialog {
 
     }
 
+    //validates the given data
+    //lets the user access the dashboard
     private void verifyLogin() {
         String username = textfield.getText();
         char[] password = passwordField.getPassword();
 
+        //checks for the root user
         if(Global.rootPassword.equals(new String(password)) && Global.rootUser.equals(username)) {
             JOptionPane.showMessageDialog(this, " Welcome Mr.Stark ! ");
             authentication = true;
@@ -70,16 +80,22 @@ public class LoginGUI extends JDialog {
         }
 
         UserDAO udao = new UserDAO();
-        User user = udao.getUserByUsername(username);
+        User user = null;
+        try{
+            user = udao.getUserByUsername(username);
+        } catch (RuntimeException e) {
+            JOptionPane.showMessageDialog(this, " Database connection failed ! \nEnsure database is running ! ");
+        }
 
+
+        //if user exists
         if (user != null){
             status.setText("");
             if(user.getPassword().equals(new String(password))) {
-               JOptionPane.showMessageDialog(this, " Login Successful ! ");
 
-               authentication = true;
-               loggedUser = user;
-               dispose();
+                JOptionPane.showMessageDialog(this, " Login Successful ! ");
+                authentication = true;
+                loggedUser = user;dispose();
 
             } else {
                 passwordField.setText("");

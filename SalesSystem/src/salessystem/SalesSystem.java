@@ -18,7 +18,10 @@ public class SalesSystem {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        new GUI();
         /*
+        Used for testing 
+
         Admin u1 = new Admin("Kalana", "Dasanayaka", "Maekar2295!@#");
         Clerk u2 = new Clerk("john", "java", "Maekar2295!@#");
 
@@ -77,7 +80,7 @@ public class SalesSystem {
         System.out.println(sdao.getSaleBySaleID(1));
 
          */
-        new GUI();
+
 
 
     }

@@ -92,6 +92,7 @@ public class ProductDAO {
         return products;
     }
 
+
     public void deleteProduct(int productID){
         String sql = "DELETE FROM products WHERE product_id = ?";
         try(Connection con = DBConnection.getConnection();
@@ -103,27 +104,8 @@ public class ProductDAO {
         }
     }
 
-    public boolean updateProduct( int productId, Product product){
-
-        String sql = "UPDATE products SET product_name = ?, price = ?, stock = ? WHERE customer_id = ?";
-
-        try(Connection con = DBConnection.getConnection();
-            PreparedStatement ps = con.prepareStatement(sql)){
-
-            ps.setString(1,product.getProductName());
-            ps.setDouble(2,product.getPrice());
-            ps.setDouble(4, product.getStock());
-            ps.setInt(4, productId);
-
-            int rows = ps.executeUpdate();
-            return rows > 0;
-
-        } catch (SQLException e) {
-            throw new RuntimeException(" Error while updating product ! ",e);
-        }
-    }
-
-    public boolean updateProductStock( int productId, Product product){
+    //updates the product stock
+    public void updateProductStock(int productId, Product product){
 
         String sql = "UPDATE products SET stock = ? WHERE product_id = ?";
 
@@ -135,15 +117,15 @@ public class ProductDAO {
             ps.setDouble(1, product.getStock());
             ps.setInt(2, productId);
 
-            int rows = ps.executeUpdate();
-            return rows > 0;
+            ps.executeUpdate();
 
         } catch (SQLException e) {
             throw new RuntimeException(" Error while updating stock of product ! ",e);
         }
     }
 
-    public boolean updateProductPrice( int productId, Product product){
+    //updates the product price
+    public void updateProductPrice(int productId, Product product){
 
         String sql = "UPDATE products SET price = ? WHERE product_id = ?";
 
@@ -155,8 +137,7 @@ public class ProductDAO {
             ps.setDouble(1, product.getPrice());
             ps.setInt(2, productId);
 
-            int rows = ps.executeUpdate();
-            return rows > 0;
+            ps.executeUpdate();
 
         } catch (SQLException e) {
             throw new RuntimeException(" Error while updating price of product ! ",e);

@@ -7,11 +7,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
 
+//JDialog for deleting a customer
 public class DeleteCustomerGUI extends JDialog {
 
-    private final JTextField textField;
-    private final JLabel customerIDStatus;
+    private final JTextField textField;//input field for customer id
+    private final JLabel customerIDStatus;//displays errors regarding customer id
 
+    //initialise the JDialog
+    //contains
+    // - customer id field (right)
+    // - customer table (left)
+    // - confirm button
     public DeleteCustomerGUI(JFrame parent){
         super(parent, "Delete Customer",true);
 
@@ -19,10 +25,12 @@ public class DeleteCustomerGUI extends JDialog {
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
+        //main panel
         JPanel parentPanel = new JPanel();
         parentPanel.setLayout(null);
         add(parentPanel);
 
+        //panel containing the table
         JPanel panel = new JPanel();
         panel.setBounds(300,20,700,250);
         parentPanel.add(panel);
@@ -45,9 +53,13 @@ public class DeleteCustomerGUI extends JDialog {
 
         JButton button = new JButton(" Confirm ");
         button.setBounds(10, 140, 165, 25);
+
+        //handles customer deletion and UI refresh
         button.addActionListener(e -> {
+
             deleteCustomer();
 
+            //refresh table after deletion
             panel.removeAll();
             panel.revalidate();
             panel.repaint();
@@ -58,7 +70,11 @@ public class DeleteCustomerGUI extends JDialog {
 
 
     }
+
+    //validates the entered info
+    //updates the datbase using the DAO
     public void deleteCustomer(){
+
         String customerID = textField.getText();
 
         if (customerID != null && !customerID.isBlank()) {
@@ -69,13 +85,17 @@ public class DeleteCustomerGUI extends JDialog {
             CustomerDAO cdao = new CustomerDAO();
             Customer customer = cdao.getCustomerByCustomerID(cusid);
 
+            //customer cannot be null, they must exist
             if (customer != null){
+
+                //confirm deletion
                 int result = JOptionPane.showConfirmDialog(
                         null,
                         "Are you sure?",
                         "Confirm",
                         JOptionPane.YES_NO_OPTION
                 );
+
                 if (result == JOptionPane.YES_OPTION) {
                     cdao.deleteCustomer(cusid);
                     JOptionPane.showMessageDialog(this, " Customer deleted successfully.");
