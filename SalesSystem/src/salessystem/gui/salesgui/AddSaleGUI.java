@@ -14,17 +14,24 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+//provides JDialog for inserting sales
 public class AddSaleGUI extends JDialog {
 
-    private final JTextField productIDField;
-    private final JTextField quantityField;
-    private final DefaultTableModel model;
-    private final JTable table;
-    private final JLabel status = new JLabel("");
-    private JTextField customerIDField;
-    private List<SaleItem> saleItems = new ArrayList<>();
+    private final JTextField productIDField;//input field for product id
+    private final JTextField quantityField;//input field for quantity
+    private final DefaultTableModel model;//data holder
+    private final JTable table;//table
+    private final JLabel status = new JLabel("");//displays errors
+    private JTextField customerIDField;//input field for customer id
+    private List<SaleItem> saleItems = new ArrayList<>();//sale items list
+    private JLabel cusid;//used to display the valid customer id
 
 
+    //initialise the JDialog
+    //includes
+    // - sale info form
+    // - table for sale items added
+    // - add item and save sale button
     public AddSaleGUI(JFrame parent) {
         super(parent, " Add Sale ", true);
 
@@ -40,6 +47,10 @@ public class AddSaleGUI extends JDialog {
         customerIDField = new JTextField();
         customerIDField.setBounds(130, 20, 150, 25);
         add(customerIDField);
+
+        cusid = new JLabel("");
+        cusid.setBounds(130, 20, 150, 25);
+        add(cusid);
 
         JLabel prodLabel = new JLabel("Product ID ");
         prodLabel.setBounds(20, 60, 100, 25);
@@ -63,6 +74,8 @@ public class AddSaleGUI extends JDialog {
 
         model = new DefaultTableModel(new String[]{"Product ID", " Unit Type ","Quantity"}, 0);
         table = new JTable(model);
+
+        //adds scroll functionality
         JScrollPane pane = new JScrollPane(table);
         pane.setBounds(20, 150, 650, 160);
         add(pane);
@@ -76,13 +89,31 @@ public class AddSaleGUI extends JDialog {
         status.setForeground(Color.red);
         add(status);
 
+        //handles adding sale items to the sale
         addItemBtn.addActionListener(e -> addItem());
+
+        //handles saving sales
         saveBtn.addActionListener(e -> saveSale(parent));
 
     }
 
+    //validate given info
+    //adds sales item to the table
+    //changes product stock quantity in the databse using the DAO
     public void addItem() {
         try {
+            int customerId = Integer.parseInt(customerIDField.getText().trim());
+
+            CustomerDAO cdao = new CustomerDAO();
+            Customer customer = cdao.getCustomerByCustomerID(customerId);
+
+            if (customer == null) {
+                status.setText("Customer not found");
+                return;
+            }
+            customerIDField.setVisible(false);
+            cusid.setText(" "+String.valueOf(customerId));
+
             int productID = Integer.parseInt(productIDField.getText().trim());
             double quantity = Double.parseDouble(quantityField.getText().trim());
 
@@ -99,6 +130,7 @@ public class AddSaleGUI extends JDialog {
                     return;
                 }
                     if (product.getStock() >= quantity) {
+                        setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE); // if user adds a sale item, a sale must be saved
                         status.setText("");
                         SaleItem item = new SaleItem(product, quantity);
                         saleItems.add(item);
@@ -129,8 +161,8 @@ public class AddSaleGUI extends JDialog {
         }
     }
 
+    //saves the sale to the database using the DAO
     public void saveSale(JFrame parent) {
-
 
         if (saleItems.isEmpty()) {
             status.setText("Add at least 1 item");
@@ -156,9 +188,6 @@ public class AddSaleGUI extends JDialog {
             SaleDAO sdao = new SaleDAO();
             sdao.addSale(sale);
 
-            JOptionPane.showMessageDialog(this, "Sale added successfully");
-            dispose();
-
             int choice = JOptionPane.showConfirmDialog(
                     null,
                     "Generate invoice?",
@@ -168,10 +197,10 @@ public class AddSaleGUI extends JDialog {
             if (choice == JOptionPane.YES_OPTION) {
                 PrintInvoiceGUI gui =new PrintInvoiceGUI(parent, sale.getSaleID());
                 gui.setVisible(true);
+                dispose();
             } else {
                 dispose();
             }
-
 
         }catch (Exception e){
             status.setText("Error at the last catch saving sale !");

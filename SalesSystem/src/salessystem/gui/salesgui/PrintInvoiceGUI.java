@@ -12,8 +12,14 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 
+//provides the JDialog for the invoice
 public class PrintInvoiceGUI extends JDialog {
 
+    //initialise the JDialog
+    // includes
+    // - company name (is a global variable, can be changed)
+    // - a table of sale items
+    // - date and total
     public PrintInvoiceGUI(JFrame parent, int saleID){
 
         super(parent, " Invoice ",true);
@@ -22,19 +28,19 @@ public class PrintInvoiceGUI extends JDialog {
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
+        //main panel
         JPanel parentPanel = new JPanel();
         parentPanel.setLayout(new BorderLayout());
         add(parentPanel);
 
+        //header that contains the company name
         JPanel header = new JPanel();
         header.setLayout(new BoxLayout(header, BoxLayout.Y_AXIS));
-
 
         JLabel title = new JLabel(Global.companyName);
         title.setFont(new Font("Arial", Font.BOLD, 26));
         title.setBorder(BorderFactory.createEmptyBorder(20, 10, 40, 10));
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
-
 
         JLabel invoice = new JLabel("INVOICE");
         invoice.setFont(new Font("Arial", Font.BOLD, 22));
@@ -54,7 +60,7 @@ public class PrintInvoiceGUI extends JDialog {
             }
         };
 
-        JTable table = new JTable(model);
+        JTable table = new JTable(model); // table
         table.setRowHeight(22);
 
         //Right align preset
@@ -66,6 +72,7 @@ public class PrintInvoiceGUI extends JDialog {
         table.getColumnModel().getColumn(3).setCellRenderer(rightAlign);
         table.getColumnModel().getColumn(4).setCellRenderer(rightAlign);
 
+        //adds scroll function
         JScrollPane scrollPane = new JScrollPane(table);
         parentPanel.add(scrollPane, BorderLayout.CENTER);
 
@@ -91,6 +98,8 @@ public class PrintInvoiceGUI extends JDialog {
             model.addRow(row);
 
         }
+
+        //footer that contains the date and the total
         JPanel footer = new JPanel(new BorderLayout());
 
         JLabel date = new JLabel("Date : "+Global.dateTimeFormat(sale.getDateTime()));
@@ -106,10 +115,11 @@ public class PrintInvoiceGUI extends JDialog {
         footer.add(totalLabel, BorderLayout.EAST);
         parentPanel.add(footer, BorderLayout.SOUTH);
 
-
-
     }
+
+    //methods which can be used to print old invoices using the sale id
     public static void printInvoiceButton(JFrame parent){
+
         JDialog popup = new JDialog(parent, "Re-Print Old Invoice",true);
         popup.setSize(500,300);
         popup.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -131,8 +141,6 @@ public class PrintInvoiceGUI extends JDialog {
         status.setBounds(10,50,200,30);
         status.setForeground(Color.red);
         parentPanel.add(status);
-
-
 
         JButton button = new JButton(" Print invoice ");
         button.setBounds(10, 80, 165, 25);

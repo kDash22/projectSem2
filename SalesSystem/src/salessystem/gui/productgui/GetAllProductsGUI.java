@@ -7,12 +7,15 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 
+//provides the JDialog for getting all products
 public class GetAllProductsGUI extends JDialog {
 
+    //initialise the JDialog
+    //includes
+    // - product table
     public GetAllProductsGUI(JFrame parent ){
 
         super(parent, "All Products", true);
-
 
         setSize(600, 300);
         setLocationRelativeTo(parent);
@@ -27,6 +30,8 @@ public class GetAllProductsGUI extends JDialog {
 
 
     }
+
+    //method that make the table
     public static void productsTable(JPanel panel){
         String[] columns = {" Product ID ", " Product Name ", " Unit type ", " Price ", " Stock "};
         DefaultTableModel model = new DefaultTableModel(columns, 0);

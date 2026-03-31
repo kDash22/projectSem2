@@ -8,8 +8,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+//DAO related to handling database operations related to saleItem objects
 public class SaleItemDAO {
 
+    //inserts a saleItem into the database
     public void addSaleItem(Connection connection, int saleID, SaleItem saleItem) throws SQLException {
 
         String sql = "INSERT INTO sale_items (sale_id, product_id, quantity, subtotal) VALUES (?,?,?,?)";
@@ -32,35 +34,7 @@ public class SaleItemDAO {
 
     }
 
-    public SaleItem getSaleItemBySaleItemID(int saleItemID){
-
-        String sql = "SELECT * FROM sale_items WHERE sale_item_id = ?";
-
-        try(Connection con = DBConnection.getConnection();
-            PreparedStatement ps = con.prepareStatement(sql )){
-
-            ps.setInt(1,saleItemID);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-
-                //retrieving the product needed to create the sale object from the product table
-                ProductDAO pdao = new ProductDAO();
-
-                Product product = pdao.getProductByProductID(rs.getInt("product_id"));
-                return new SaleItem(
-                        rs.getInt("sale_item_id"),
-                        product,
-                        rs.getDouble("quantity"),
-                        rs.getDouble("subtotal")
-                );
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(" Error occurred while retrieving sale item ! ",e);
-        }
-        return null;
-    }
-
+    //returns all the sale items from the database
     public List<SaleItem> getAllSaleItems(){
 
         List<SaleItem> saleItems = new ArrayList<>();
@@ -72,7 +46,8 @@ public class SaleItemDAO {
             ResultSet rs = ps.executeQuery()
         ){
             while(rs.next()){
-                //retrieving the product needed to create the sale object from the product table
+
+                //to retrieve the product needed to create the sale object from the product table
                 ProductDAO pdao = new ProductDAO();
 
                 Product product = pdao.getProductByProductID(rs.getInt("product_id"));
@@ -89,21 +64,8 @@ public class SaleItemDAO {
         }
         return saleItems;
     }
-    public void deleteSaleItem(int saleItemID){
 
-        String sql = "DELETE FROM sale_items WHERE sale_item_id = ?";
-
-        try(Connection con = DBConnection.getConnection();
-            PreparedStatement ps = con.prepareStatement(sql)){
-
-            ps.setInt(1, saleItemID);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(" Error occurred while deleting sale item ! ",e);
-        }
-
-    }
-
+    //returns all the sale items in the database
     public List<SaleItem> getSaleItemsBySaleID(int saleID){
         List<SaleItem> saleItems = new ArrayList<>();
 
@@ -117,6 +79,7 @@ public class SaleItemDAO {
 
             while(rs.next()){
 
+                //to retrieve the product needed for creating a SaleItem
                 ProductDAO pdao = new ProductDAO();
 
                 Product product = pdao.getProductByProductID(rs.getInt("product_id"));

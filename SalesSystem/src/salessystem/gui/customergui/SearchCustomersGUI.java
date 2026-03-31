@@ -8,14 +8,19 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 
+//JDialog for searching customers
 public class SearchCustomersGUI extends JDialog {
 
-    private final JTextField textfield;
-    private JLabel msg = new JLabel("");
-    private JLabel customerID = new JLabel("");
-    private JLabel name = new JLabel("");
-    private JLabel contactNumber = new JLabel("");
+    private final JTextField textfield; //input field for customer id
+    private JLabel msg = new JLabel(""); //displays error msgs
+    private JLabel customerID = new JLabel("");//displays errors regarding the customer id
+    private JLabel name = new JLabel("");//displays the customer name
+    private JLabel contactNumber = new JLabel("");//displays the customer contact number
 
+    //initialise the JDialog
+    //includes
+    // - customer id input field
+    // - search button
     public SearchCustomersGUI(JFrame parent){
 
         super(parent, " Search Customers ",true);
@@ -24,6 +29,7 @@ public class SearchCustomersGUI extends JDialog {
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
+        //main panel
         JPanel panel = new JPanel();
         panel.setLayout(null);
         add(panel);
@@ -44,18 +50,23 @@ public class SearchCustomersGUI extends JDialog {
 
     }
 
+    //validates the customer id
+    //retrieves the data from the database using the DAO
     public void searchCustomer(JPanel panel){
 
         String cusID = textfield.getText();
         Customer customer = null;
         CustomerDAO customerDAO = new CustomerDAO();
 
+        //customer id cannot be emopty or blank
         if (cusID != null && !cusID.isBlank()){
             int cusid = Integer.parseInt(cusID);
             customer = customerDAO.getCustomerByCustomerID(cusid);}
 
+        //if customer exists
         if( customer != null){
 
+            //clears all the labels
             msg.setText("");
             customerID.setText("");
             name.setText("");

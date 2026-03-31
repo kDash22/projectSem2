@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
 
+//provides JDialog for overriding password
 public class OverridePasswordGUI extends JDialog {
     private final JPasswordField passwordField;
     private final JPasswordField confirmPasswordField;
@@ -14,6 +15,10 @@ public class OverridePasswordGUI extends JDialog {
     private final JLabel nameStatus;
     private JTextField textfield;
 
+    //initialise JDialog
+    //includes
+    // - user form
+    // - confirm button
     public OverridePasswordGUI(JFrame parent){
         super(parent, "Override Password", true);
 
@@ -58,6 +63,8 @@ public class OverridePasswordGUI extends JDialog {
 
         JButton button = new JButton(" Confirm ");
         button.setBounds(10, 195, 165, 25);
+
+        //handles password override
         button.addActionListener(e -> overridePassword());
         panel.add(button);
 
@@ -66,64 +73,67 @@ public class OverridePasswordGUI extends JDialog {
         passwordStatus.setForeground(Color.red);
         panel.add(passwordStatus);
 
+    }
 
-        }
+    //validates given data
+    //changes the password in the database using the DAO
+    public void overridePassword(){
 
-        public void overridePassword(){
-            String username = textfield.getText();
-            char[] password = passwordField.getPassword();
-            char[] confirmed = confirmPasswordField.getPassword();
-            boolean passwordCheck = false;
-            boolean usernameCheck = false;
+        String username = textfield.getText();
+        char[] password = passwordField.getPassword();
+        char[] confirmed = confirmPasswordField.getPassword();
+        boolean passwordCheck = false;
+        boolean usernameCheck = false;
 
-            if (User.validatePassword(new String(password))) {
+        //password validation
+        if (User.validatePassword(new String(password))) {
 
-                if (Arrays.equals(password, confirmed)) {
-
-                    passwordCheck = true;
-                    passwordStatus.setText("");
-
-                }else {
-                    passwordStatus.setText(" Passwords do not match ! ");
-                    confirmPasswordField.setText("");
-                }
-
+            //if password matches the confirm password
+            if (Arrays.equals(password, confirmed)) {
+                passwordCheck = true;
                 passwordStatus.setText("");
 
-            } else {
-                if (password.length > 8){
-                    passwordStatus.setText(" Password must contain at least one lowercase letter,an uppercase letter and a symbol !");
-                }else{
-                    passwordStatus.setText(" Password must be longer than 8 characters !");
-                }
-
+            }else {
+                passwordStatus.setText(" Passwords do not match ! ");
+                confirmPasswordField.setText("");
             }
 
-            if (username != null && !username.isBlank()) {
+            passwordStatus.setText("");
 
-                username = username.trim();
-                nameStatus.setText("");
-                usernameCheck = true;
-            } else {
-                nameStatus.setText(" Username cannot be blank ! ");
+        } else {
+            if (password.length > 8){
+                passwordStatus.setText(" Password must contain at least one lowercase letter,an uppercase letter and a symbol !");
+            }else{
+                passwordStatus.setText(" Password must be longer than 8 characters !");
             }
-
-            if (usernameCheck && passwordCheck){
-                UserDAO udao = new UserDAO();
-                User user = udao.getUserByUsername(username);
-                user.setPassword(new String(password));
-
-                if (user != null){
-                    udao.updatePassword(user.getUserID(), user);
-                    JOptionPane.showMessageDialog(this, " Password Override Successful ! ");
-                    dispose();
-                }else {
-                    JOptionPane.showMessageDialog(this, " User not found ");
-                    textfield.setText("");
-                    passwordField.setText("");
-                    confirmPasswordField.setText("");
-                }
-            }
-
         }
+
+        //username cannot be empty or blank
+        if (username != null && !username.isBlank()) {
+
+            username = username.trim();
+            nameStatus.setText("");
+            usernameCheck = true;
+        } else {
+            nameStatus.setText(" Username cannot be blank ! ");
+        }
+
+        //if both checks pass
+        if (usernameCheck && passwordCheck){
+            UserDAO udao = new UserDAO();
+            User user = udao.getUserByUsername(username);
+            user.setPassword(new String(password));
+
+            if (user != null){
+                udao.updatePassword(user.getUserID(), user);
+                JOptionPane.showMessageDialog(this, " Password Override Successful ! ");
+                dispose();
+            }else {
+                JOptionPane.showMessageDialog(this, " User not found ");
+                textfield.setText("");
+                passwordField.setText("");
+                confirmPasswordField.setText("");
+            }
+        }
+    }
 }

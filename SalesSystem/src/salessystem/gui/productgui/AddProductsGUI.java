@@ -8,15 +8,21 @@ import salessystem.model.UnitType;
 import javax.swing.*;
 import java.awt.*;
 
+//provides the JDialog for inserting product
 public class AddProductsGUI extends JDialog {
 
-    private final JTextField nameText ;
-    private final JLabel nameStatus ;
-    private final JTextField stockText;
-    private final JLabel stockStatus;
-    private final JLabel priceStatus;
-    private final JTextField priceText;
+    private final JTextField nameText ; // input field for product name
+    private final JLabel nameStatus ; // displays errors regarding name
+    private final JTextField stockText;// input field for product stock
+    private final JLabel stockStatus;// displays errors regarding stock
+    private final JLabel priceStatus;// displays errors regarding price
+    private final JTextField priceText;// input field for price
 
+    //initialise the JDialog
+    //includes
+    // - the product info form (left)
+    // - product table (right)
+    // - confirm button
     public AddProductsGUI(JFrame parent){
         super(parent, "Add New Product", true);
 
@@ -24,12 +30,14 @@ public class AddProductsGUI extends JDialog {
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
+        //main panel
         JPanel parentPanel = new JPanel();
         parentPanel.setLayout(null);
         add(parentPanel);
 
+        //table panel
         JPanel panel = new JPanel();
-        panel.setBounds(300,20,700,250);
+        panel.setBounds(400,20,700,250);
         parentPanel.add(panel);
 
         panel.removeAll();
@@ -76,9 +84,12 @@ public class AddProductsGUI extends JDialog {
 
         JButton button = new JButton(" Add ");
         button.setBounds(10, 200, 165, 25);
+
+        //handles the insertions and UI refresh
         button.addActionListener(e -> {
             newProduct();
 
+            //table refresh
             panel.removeAll();
             panel.revalidate();
             panel.repaint();
@@ -88,7 +99,10 @@ public class AddProductsGUI extends JDialog {
 
     }
 
+    //validates the info
+    //inserts data into database using the DAO
     public void newProduct(){
+
         Product product = null;
         ProductDAO pdao = new ProductDAO();
 
@@ -97,12 +111,23 @@ public class AddProductsGUI extends JDialog {
 
         String priceString = priceText.getText();
         boolean priceCheck = false;
-        double price = Double.parseDouble(priceString);
+        double price = -1;
+        try{
+            price = Double.parseDouble(priceString);
+        } catch (NumberFormatException e) {
+            priceStatus.setText(" Input only numbers ! ");
+        }
 
         String stockString = stockText.getText();
         boolean stockCheck = false;
-        double stock = Double.parseDouble(stockString);
+        double stock = -1;
+        try {
+            stock = Double.parseDouble(stockString);
+        } catch (NumberFormatException e) {
+            stockStatus.setText("Input only numbers ! ");
+        }
 
+        //name cannot be empty or blank
         if (name !=null && !name.isBlank()){
             nameCheck = true;
             nameStatus.setText("");
@@ -110,6 +135,7 @@ public class AddProductsGUI extends JDialog {
             nameStatus.setText(" Customer name cannot be empty ! ");
         }
 
+        //price cannot be empty or blank
         if (priceString !=null && !priceString.isBlank()){
             if(price < 0){
                 priceStatus.setText(" Price cannot be lower than 0 ! ");
@@ -121,6 +147,8 @@ public class AddProductsGUI extends JDialog {
         } else {
             priceStatus.setText(" Price name cannot be empty ! ");
         }
+
+        //stock cannot be empty or blank
         if (stockString !=null && !stockString.isBlank()){
             if (stock < 0){
                 stockStatus.setText(" Stock cannot be lower than 0 ! ");
@@ -132,9 +160,12 @@ public class AddProductsGUI extends JDialog {
         } else {
             stockStatus.setText(" stock cannot be empty ! ");
         }
+
+        //if all conditions meet
         if (nameCheck && priceCheck && stockCheck){
             String[] options = {"PIECE", "WEIGHT"};
 
+            //asks for the unit type which decides how quantity functions
             int choice = JOptionPane.showOptionDialog(
                     //checks role
                     null,
@@ -147,7 +178,11 @@ public class AddProductsGUI extends JDialog {
                     options[1]
             );
             if (choice == 0){
-                product = new Product(name, UnitType.PIECE, price, stock);
+                try{
+                    product = new Product(name, UnitType.PIECE, price, stock);
+                } catch (IllegalArgumentException e) {
+                    stockStatus.setText("for piece type units the stock must be a whole number");
+                }
                 pdao.addProduct(product);
                 JOptionPane.showMessageDialog(this, " Product (PIECE) Added Successfully ! ");
                 nameText.setText("");

@@ -1,6 +1,0 @@
-String tag = String.format("\n%-15s : %s %s",
-    "Name",
-    getFirstName(),
-    getLastName()
-); 
-//for use tostring to make it neater 

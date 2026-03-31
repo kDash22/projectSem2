@@ -6,13 +6,19 @@ import salessystem.model.Product;
 import javax.swing.*;
 import java.awt.*;
 
+//provides the JDialog for upating product price
 public class UpdateProductPriceGUI extends JDialog {
 
-    private final JTextField productIDText;
-    private final JLabel productIDStatus;
-    private final JTextField priceText;
-    private final JLabel priceStatus;
+    private final JTextField productIDText;//input field for product id
+    private final JLabel productIDStatus;//displays errors regarding product id
+    private final JTextField priceText;//input field for product price
+    private final JLabel priceStatus;//displays errors regarding product price
 
+    //initialise the JDialog
+    //includes
+    // - product info form (left)
+    // - product table (right)
+    // - confirm button
     public UpdateProductPriceGUI(JFrame parent){
         super(parent, "Update Product Price", true);
 
@@ -20,10 +26,12 @@ public class UpdateProductPriceGUI extends JDialog {
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
+        //main panel
         JPanel parentPanel = new JPanel();
         parentPanel.setLayout(null);
         add(parentPanel);
 
+        //table panel
         JPanel panel = new JPanel();
         panel.setBounds(300,20,700,250);
         parentPanel.add(panel);
@@ -59,9 +67,12 @@ public class UpdateProductPriceGUI extends JDialog {
 
         JButton button = new JButton(" Confirm ");
         button.setBounds(10, 140, 165, 25);
-        button.addActionListener(e -> {
-            updateStock();
 
+        //handles the updating product price and UI refresh
+        button.addActionListener(e -> {
+            updatePrice();
+
+            //table refresh
             panel.removeAll();
             panel.revalidate();
             panel.repaint();
@@ -71,7 +82,10 @@ public class UpdateProductPriceGUI extends JDialog {
 
 
     }
-    public void updateStock(){
+
+    //validates the info
+    //updates the database using the DAO
+    public void updatePrice(){
         String productIDString = productIDText.getText();
         String priceString = priceText.getText();
         double price = Double.parseDouble(priceString);
@@ -79,6 +93,7 @@ public class UpdateProductPriceGUI extends JDialog {
         Product product = null;
         ProductDAO pdao = new ProductDAO();
 
+        //product id cannot be empty or blank
         if(productIDString !=null && !productIDString.isBlank()){
 
             productIDStatus.setText("");
@@ -87,10 +102,12 @@ public class UpdateProductPriceGUI extends JDialog {
             int prodID = Integer.parseInt(productIDString);
             product = pdao.getProductByProductID(prodID);
 
+            //if price is not negative
             if (price >= 0){
                 priceStatus.setText("");
                 productIDStatus.setText("");
 
+                //if product exists
                 if (product != null){
                     product.setPrice(price);
                     pdao.updateProductPrice(prodID, product);
