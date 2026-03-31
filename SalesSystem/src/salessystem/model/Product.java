@@ -1,13 +1,15 @@
 package salessystem.model;
 
+//Represents a product
 public class Product {
+
     private int productId;
     private String productName;
     private double price;
     private double stock;
     private UnitType unitType;
 
-    //for new product, id not set yet
+    //for making new products, the product id will be set by the database with autoincrement
     public Product(String productName, UnitType unitType, double price, double stock) {
 
         setProductName(productName);
@@ -17,7 +19,7 @@ public class Product {
 
     }
 
-    //for existing product, id has already been set by the database, only used for retrieval
+    //for retrieving products from the database
     public Product(int productID,String productName, UnitType unitType, double price, double stock){
 
         this(productName,unitType,price,stock);
@@ -25,6 +27,7 @@ public class Product {
     }
 
     public String toString() {
+
         String msg = "\nProduct ID : " + getProductId();
         msg += "\nProduct Name : " + getProductName();
         msg += "\nPrice : " + getPrice();
@@ -86,7 +89,7 @@ public class Product {
         return unitType;
     }
 
-    //validations
+    //instance variable validation methods
     public void validateProductName(String productName) {
         if (productName == null || productName.trim().isEmpty())
             throw new IllegalArgumentException("Product name cannot be empty!");

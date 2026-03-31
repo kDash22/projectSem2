@@ -5,6 +5,7 @@ import salessystem.model.Customer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.SQLException;
 
 public class DeleteCustomerGUI extends JDialog {
 
@@ -14,31 +15,46 @@ public class DeleteCustomerGUI extends JDialog {
     public DeleteCustomerGUI(JFrame parent){
         super(parent, "Delete Customer",true);
 
-        setSize(500, 300);
+        setSize(1000, 400);
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
+        JPanel parentPanel = new JPanel();
+        parentPanel.setLayout(null);
+        add(parentPanel);
+
         JPanel panel = new JPanel();
-        panel.setLayout(null);
-        add(panel);
+        panel.setBounds(300,20,700,250);
+        parentPanel.add(panel);
+
+        panel.removeAll();
+        GetAllCustomersGUI.customerTable(panel);
 
         JLabel customerId = new JLabel("Customer ID ");
         customerId.setBounds(10, 20, 80, 30);
-        panel.add(customerId);
+        parentPanel.add(customerId);
 
         textField = new JTextField(25);
         textField.setBounds(135, 20, 165, 25);
-        panel.add(textField);
+        parentPanel.add(textField);
 
         customerIDStatus = new JLabel("");
         customerIDStatus.setBounds(10, 50, 200, 30);
         customerIDStatus.setForeground(Color.red);
-        panel.add(customerIDStatus);
+        parentPanel.add(customerIDStatus);
 
         JButton button = new JButton(" Confirm ");
-        button.setBounds(10, 195, 165, 25);
-        button.addActionListener(e -> deleteCustomer());
-        panel.add(button);
+        button.setBounds(10, 140, 165, 25);
+        button.addActionListener(e -> {
+            deleteCustomer();
+
+            panel.removeAll();
+            panel.revalidate();
+            panel.repaint();
+
+            GetAllCustomersGUI.customerTable(panel);
+        });
+        parentPanel.add(button);
 
 
     }
@@ -63,7 +79,7 @@ public class DeleteCustomerGUI extends JDialog {
                 if (result == JOptionPane.YES_OPTION) {
                     cdao.deleteCustomer(cusid);
                     JOptionPane.showMessageDialog(this, " Customer deleted successfully.");
-                    dispose();
+
                 }
                 else if (result == JOptionPane.NO_OPTION) {
 

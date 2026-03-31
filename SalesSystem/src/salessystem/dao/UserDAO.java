@@ -10,23 +10,34 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+//DAO related to handling database operations related to User objects
 public class UserDAO {
 
+    //create
+    //uses a transaction to ensure insert and update both complete or none does
     public void addUser(User user)  {
+
         String insertSql = "INSERT INTO users (fname,lname,username,password,role) VALUES (?,?,?,?,?)";
         String updateSql = "UPDATE users SET username = ? WHERE user_id = ?";
 
         try(Connection connection = DBConnection.getConnection()){
 
-            connection.setAutoCommit(false); //start a transaction to ensure atomicity
+            connection.setAutoCommit(false); //transaction to ensure atomicity
 
             try (PreparedStatement psInsert = connection.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS);
                  PreparedStatement psUpdate = connection.prepareStatement(updateSql)){
 
-                String temUserName = "TEMP_"+System.nanoTime();
+                String tempUserName = "TEMP_"+System.nanoTime();/*
+
+                -> temporary username set before configuring the
+                username according to the lastname and the userID.
+                -> System.nanoTime() ensures no 2 temporary usernames are the same
+
+                */
+
                 psInsert.setString(1, user.getFirstName());
                 psInsert.setString(2, user.getLastName());
-                psInsert.setString(3, temUserName);
+                psInsert.setString(3, tempUserName);
                 psInsert.setString(4, user.getPassword());
                 psInsert.setString(5, user.getRole());
 
@@ -35,8 +46,10 @@ public class UserDAO {
                 ResultSet rs = psInsert.getGeneratedKeys();
 
                     if (rs.next()) {
-                        user.setUserID(rs.getInt(1));
-                        user.createUserName();
+
+                        user.setUserID(rs.getInt(1));//sets the user id
+
+                        user.createUserName();//generates the username
 
                         psUpdate.setString(1, user.getUserName());
                         psUpdate.setInt(2, user.getUserID());
@@ -46,16 +59,18 @@ public class UserDAO {
 
             }
             catch (SQLException e){
-                connection.rollback();
-                throw new RuntimeException(" Error (1) occurred while adding user ! ",e);
+                connection.rollback(); //only commits if both actions are successfully
+                throw new RuntimeException(" Error (transaction fail) occurred while adding user ! ",e);
 
             }
         } catch (SQLException e) {
-            throw new RuntimeException(" Error (2) occurred while adding user ! ",e);
+            throw new RuntimeException(" Error occurred while adding user ! ",e);
         }
     }
 
+    //allows the searching of a user by the username
     public User getUserByUsername(String username){
+
         String sql = "SELECT * FROM users WHERE username = ?";
 
         try (Connection connection = DBConnection.getConnection();
@@ -64,26 +79,28 @@ public class UserDAO {
             ps.setString(1, username);
 
             try(ResultSet rs = ps.executeQuery()){
-    //public Clerk(int userID,String firstName, String lastName, String userName, String password)
+
                 if (rs.next()){
+
+                    //initiates depending on the role
                     if (rs.getString("role").equals("Admin")){
-                        Admin admin = new Admin(
+
+                        return new Admin(
                                 rs.getInt("user_id"),
                                 rs.getString("fname"),
                                 rs.getString("lname"),
                                 rs.getString("username"),
                                 rs.getString("password"));
-                        return admin;
 
                     }
                     if (rs.getString("role").equals("Clerk")){
-                        Clerk clerk = new Clerk(
+
+                        return new Clerk(
                                 rs.getInt("user_id"),
                                 rs.getString("fname"),
                                 rs.getString("lname"),
                                 rs.getString("username"),
                                 rs.getString("password"));
-                        return clerk;
                     }
                 }
             }
@@ -93,7 +110,10 @@ public class UserDAO {
         }
         return null;
     }
+
+    //allows the searching of a user by the user id
     public User getUserByUserID(int userID){
+
         String sql = "SELECT * FROM users WHERE user_id = ?";
 
         try (Connection connection = DBConnection.getConnection();
@@ -102,26 +122,28 @@ public class UserDAO {
             ps.setInt(1, userID);
 
             try(ResultSet rs = ps.executeQuery()){
-                //public Clerk(int userID,String firstName, String lastName, String userName, String password)
+
                 if (rs.next()){
+
+                    //initiates depending on the role
                     if (rs.getString("role").equals("Admin")){
-                        Admin admin = new Admin(
+
+                        return new Admin(
                                 rs.getInt("user_id"),
                                 rs.getString("fname"),
                                 rs.getString("lname"),
                                 rs.getString("username"),
                                 rs.getString("password"));
-                        return admin;
 
                     }
                     if (rs.getString("role").equals("Clerk")){
-                        Clerk clerk = new Clerk(
+
+                        return new Clerk(
                                 rs.getInt("user_id"),
                                 rs.getString("fname"),
                                 rs.getString("lname"),
                                 rs.getString("username"),
                                 rs.getString("password"));
-                        return clerk;
                     }
                 }
             }
@@ -132,6 +154,7 @@ public class UserDAO {
         return null;
     }
 
+    //returns all the users in the database
     public List<User> getAllUsers(){
 
         List<User> users = new ArrayList<>();
@@ -174,9 +197,11 @@ public class UserDAO {
         return users;
     }
 
+    //deletes an user
     public void deleteUser(int userID){
 
         String sql = "DELETE FROM users WHERE user_id = ?";
+
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)
         ){
@@ -189,8 +214,9 @@ public class UserDAO {
         }
     }
 
+    //changes the password
+    public void updatePassword(int userID, User user){
 
-    public boolean updatePassword(int userID, User user){
         String sql = "UPDATE users SET password = ? WHERE user_id = ?";
 
         try(Connection con = DBConnection.getConnection();
@@ -199,15 +225,15 @@ public class UserDAO {
             ps.setString(1, user.getPassword());
             ps.setInt(2, userID);
 
-            int rows = ps.executeUpdate();
-            return rows>0;
+            ps.executeUpdate();
 
         } catch (SQLException e) {
             throw new RuntimeException(" Error occurred while updating password ! ",e);
         }
     }
 
-    public boolean updateName(int userID, User user){
+    //changes both first name and last name of a user
+    public void updateName(int userID, User user){
         String sql = "UPDATE users SET fname = ?, lname = ? WHERE user_id = ?";
 
         try(Connection con = DBConnection.getConnection();
@@ -218,7 +244,6 @@ public class UserDAO {
             ps.setInt(3, userID);
 
             int rows = ps.executeUpdate();
-            return rows>0;
 
         } catch (SQLException e) {
             throw new RuntimeException(" Error occurred while updating password ! ",e);

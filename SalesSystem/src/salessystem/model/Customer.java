@@ -1,5 +1,6 @@
 package salessystem.model;
 
+//Represents a Customer
 public class Customer {
     private int customerID;
     private String name;
@@ -12,7 +13,9 @@ public class Customer {
     }
 
     public void setCustomerID(int customerID){
-        if (this.customerID != 0) { // it gets set by the database as customerID is the primary key and is set to auto increment
+
+        if (this.customerID != 0) {
+            // it gets set by the database as customerID is the primary key and is set to auto increment
             throw new IllegalStateException("ID already set");
         }
         this.customerID = customerID;
@@ -39,7 +42,7 @@ public class Customer {
         return customerID;
     }
 
-    //for new customers, id not set yet by the database
+    //for new customers, the databse will set the customer ID with autoincrement
     public Customer(String name, String contactNumber){
 
         setName(name);
@@ -47,7 +50,6 @@ public class Customer {
 
     }
 
-    //for CRUD usage
     //for retrieving existing customers from the database
     public Customer(int customerID, String name, String contactNumber){
         this(name, contactNumber);
@@ -56,16 +58,19 @@ public class Customer {
 
     @Override
     public String toString(){
+
         String msg = "\nName : "+getName();
         msg += "\nCustomer ID: "+getCustomerID();
         msg += "\nContact Number : "+getContactNumber();
         return msg;
     }
+
+    //checks if a String variable is isNumericOnly
     public static boolean isNumericOnly(String value) {
         return value != null && value.matches("\\d+");
     }
 
-    //validation
+    //Instance variable validation methods
     public void validateName(String name){
         if (name == null || name.trim().isEmpty()){
             throw new IllegalArgumentException(" Customer name cannot be empty ! ");

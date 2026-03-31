@@ -4,7 +4,9 @@ import salessystem.dao.CustomerDAO;
 import salessystem.model.Customer;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.List;
 
 public class SearchCustomersGUI extends JDialog {
 
@@ -64,7 +66,7 @@ public class SearchCustomersGUI extends JDialog {
             msg.setForeground(Color.black);
             msg.setBounds(10,100,400,25);
 
-            customerID.setText("User ID: "+ customer.getCustomerID());
+            customerID.setText("Customer ID: "+ customer.getCustomerID());
             customerID.setBounds(10,130,400,25);
 
             name.setText("Name : "+customer.getName());
@@ -77,6 +79,7 @@ public class SearchCustomersGUI extends JDialog {
             panel.add(customerID);
             panel.add(name);
             panel.add(contactNumber);
+
 
         }else {
             msg.setText("");

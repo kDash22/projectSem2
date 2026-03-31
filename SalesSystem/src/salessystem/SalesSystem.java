@@ -5,6 +5,7 @@
 package salessystem;
 
 import salessystem.dao.*;
+import salessystem.gui.GUI;
 import salessystem.model.*;
 
 /**
@@ -76,6 +77,7 @@ public class SalesSystem {
         System.out.println(sdao.getSaleBySaleID(1));
 
          */
+        new GUI();
 
 
     }

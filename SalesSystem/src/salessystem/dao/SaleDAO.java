@@ -160,10 +160,4 @@ public class SaleDAO {
         }
 
     }
-
-
-
-
-
-
 }

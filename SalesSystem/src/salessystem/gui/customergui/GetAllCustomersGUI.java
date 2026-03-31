@@ -9,8 +9,6 @@ import java.util.List;
 
 public class GetAllCustomersGUI extends JDialog {
 
-    private JTable table;
-    private DefaultTableModel model;
 
     public GetAllCustomersGUI(JFrame parent ){
 
@@ -25,13 +23,20 @@ public class GetAllCustomersGUI extends JDialog {
         panel.setLayout(null);
         add(panel);
 
-        String[] columns = {" Customer ID ", " Customer Name ", " Contact Number "};
-        model = new DefaultTableModel(columns, 0);
+        customerTable(panel);
 
-        table = new JTable(model);
+    }
+
+    public static void customerTable(JPanel panel){
+
+
+        String[] columns = {" Customer ID ", " Customer Name ", " Contact Number "};
+        DefaultTableModel model = new DefaultTableModel(columns, 0);
+
+        JTable table = new JTable(model);
 
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(10,10,550,250);
+        scrollPane.setBounds(10,10,350,250);
         panel.add(scrollPane);
 
         CustomerDAO cdao = new CustomerDAO();
@@ -46,7 +51,10 @@ public class GetAllCustomersGUI extends JDialog {
                     customer.getContactNumber()
             };
             model.addRow(row);
+
         }
 
     }
+
+
 }

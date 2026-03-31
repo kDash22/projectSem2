@@ -74,7 +74,7 @@ public class SearchProductGUI extends JDialog {
             productName.setText("Product Name : "+product.getProductName());
             productName.setBounds(10,160,400,25);
 
-            price.setText("Price : "+product.getPrice());
+            price.setText("Price (Rs.) : "+product.getPrice());
             price.setBounds(10,190,400,25);
 
             stock.setText("Stock : "+product.getStock());

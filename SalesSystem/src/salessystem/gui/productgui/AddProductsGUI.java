@@ -1,6 +1,7 @@
 package salessystem.gui.productgui;
 
 import salessystem.dao.ProductDAO;
+import salessystem.gui.customergui.GetAllCustomersGUI;
 import salessystem.model.Product;
 import salessystem.model.UnitType;
 
@@ -19,57 +20,71 @@ public class AddProductsGUI extends JDialog {
     public AddProductsGUI(JFrame parent){
         super(parent, "Add New Product", true);
 
-        setSize(600, 300);
+        setSize(1000, 300);
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
+        JPanel parentPanel = new JPanel();
+        parentPanel.setLayout(null);
+        add(parentPanel);
+
         JPanel panel = new JPanel();
-        panel.setLayout(null);
-        add(panel);
+        panel.setBounds(300,20,700,250);
+        parentPanel.add(panel);
+
+        panel.removeAll();
+        GetAllProductsGUI.productsTable(panel);
 
         JLabel productName = new JLabel("Product Name ");
         productName.setBounds(10, 20, 120, 30);
-        panel.add(productName);
+        parentPanel.add(productName);
 
         nameText = new JTextField(25);
         nameText.setBounds(140, 20, 165, 25);
-        panel.add(nameText);
+        parentPanel.add(nameText);
 
         nameStatus = new JLabel("");
         nameStatus.setBounds(10, 50, 500, 30);
         nameStatus.setForeground(Color.red);
-        panel.add(nameStatus);
+        parentPanel.add(nameStatus);
 
         JLabel stock = new JLabel("Stock ");
         stock.setBounds(10, 80, 120, 30);
-        panel.add(stock);
+        parentPanel.add(stock);
 
         stockText = new JTextField(25);
         stockText.setBounds(140, 80, 165, 25);
-        panel.add(stockText);
+        parentPanel.add(stockText);
 
         stockStatus = new JLabel("");
         stockStatus.setBounds(10, 110, 500, 30);
         stockStatus.setForeground(Color.red);
-        panel.add(stockStatus);
+        parentPanel.add(stockStatus);
 
-        JLabel price = new JLabel("Price ");
+        JLabel price = new JLabel("Price (Rs.) ");
         price.setBounds(10, 140, 120, 30);
-        panel.add(price);
+        parentPanel.add(price);
 
         priceText = new JTextField(25);
         priceText.setBounds(140, 140, 165, 25);
-        panel.add(priceText);
+        parentPanel.add(priceText);
 
         priceStatus = new JLabel("");
         priceStatus.setBounds(10, 170, 500, 30);
         priceStatus.setForeground(Color.red);
-        panel.add(priceStatus);
+        parentPanel.add(priceStatus);
 
         JButton button = new JButton(" Add ");
         button.setBounds(10, 200, 165, 25);
-        button.addActionListener(e -> newProduct());
-        panel.add(button);
+        button.addActionListener(e -> {
+            newProduct();
+
+            panel.removeAll();
+            panel.revalidate();
+            panel.repaint();
+            GetAllProductsGUI.productsTable(panel);
+        });
+        parentPanel.add(button);
 
     }
 
@@ -135,13 +150,17 @@ public class AddProductsGUI extends JDialog {
                 product = new Product(name, UnitType.PIECE, price, stock);
                 pdao.addProduct(product);
                 JOptionPane.showMessageDialog(this, " Product (PIECE) Added Successfully ! ");
-                dispose();
+                nameText.setText("");
+                priceText.setText("");
+                stockText.setText("");
             }
             if (choice == 1){
                 product = new Product(name, UnitType.WEIGHT, price, stock);
                 pdao.addProduct(product);
                 JOptionPane.showMessageDialog(this, " Product (WEIGHT) Added Successfully ! ");
-                dispose();
+                nameText.setText("");
+                priceText.setText("");
+                stockText.setText("");
             }
             if (product == null){
                 JOptionPane.showMessageDialog(this, " Error occurred while adding product ! ");

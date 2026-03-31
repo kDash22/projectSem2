@@ -1,16 +1,16 @@
 package salessystem.dao;
 
-import salessystem.GlobalMethods;
 import salessystem.database.DBConnection;
 import salessystem.model.Customer;
 
-import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+//DAO related to handling database operations related to Customer objects
 public class CustomerDAO {
 
+    //inserts a customer into the database
     public void addCustomer(Customer customer){
 
         String sql = "INSERT INTO customers(name, contact) VALUES (?,?)";
@@ -25,7 +25,7 @@ public class CustomerDAO {
 
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
-                customer.setCustomerID(rs.getInt(1));
+                customer.setCustomerID(rs.getInt(1)); //sets the customer id
             }
 
         } catch (SQLException e) {
@@ -34,7 +34,9 @@ public class CustomerDAO {
 
     }
 
+    //search for customer using the customer id
     public Customer getCustomerByCustomerID(int customerID){
+
         String sql =  "SELECT * FROM customers WHERE customer_id = ?";
 
         try(Connection con = DBConnection.getConnection();
@@ -56,6 +58,7 @@ public class CustomerDAO {
         return null;
     }
 
+    //returns all the customers in the database
     public List<Customer> getAllCustomers(){
 
         List<Customer> customers = new ArrayList<>();
@@ -78,6 +81,7 @@ public class CustomerDAO {
         return customers;
     }
 
+    //deletes a customer
     public void deleteCustomer(int customerID){
         String sql = "DELETE FROM customers WHERE customer_id = ?";
 
@@ -93,7 +97,9 @@ public class CustomerDAO {
         }
     }
 
-    public boolean updateCustomer( int customerID, Customer customer){
+    //allows the change of customer name and customer contact number
+    //helpful if a customer wants to transfer his account to someone
+    public void updateCustomer(int customerID, Customer customer){
 
         String sql = "UPDATE customers SET name = ?, contact = ? WHERE customer_id = ?";
 
@@ -104,15 +110,15 @@ public class CustomerDAO {
             ps.setString(2,customer.getContactNumber());
             ps.setInt(3, customerID);
 
-            int rows = ps.executeUpdate();
-            return rows > 0;
+            ps.executeUpdate();
 
         } catch (SQLException e) {
             throw new RuntimeException(" Error while updating customer ! ",e);
         }
     }
 
-    public boolean updateCustomerContact(int customerID, Customer customer){
+    //allows the change of only the contact number
+    public void updateCustomerContact(int customerID, Customer customer){
         String sql = "UPDATE customers SET contact = ? WHERE customer_id = ?";
 
         try(Connection con = DBConnection.getConnection();
@@ -121,8 +127,7 @@ public class CustomerDAO {
           ps.setString(1,customer.getContactNumber());
           ps.setInt(2, customerID);
 
-          int rows = ps.executeUpdate();
-          return rows>0 ;
+          ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(" Error occurred while updating contact number ! ",e);
         }

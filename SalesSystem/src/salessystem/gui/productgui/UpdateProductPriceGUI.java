@@ -14,46 +14,60 @@ public class UpdateProductPriceGUI extends JDialog {
     private final JLabel priceStatus;
 
     public UpdateProductPriceGUI(JFrame parent){
-        super(parent, "Update The Contact Number", true);
+        super(parent, "Update Product Price", true);
 
-        setSize(600, 300);
+        setSize(1000, 300);
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
+        JPanel parentPanel = new JPanel();
+        parentPanel.setLayout(null);
+        add(parentPanel);
+
         JPanel panel = new JPanel();
-        panel.setLayout(null);
-        add(panel);
+        panel.setBounds(300,20,700,250);
+        parentPanel.add(panel);
+
+        panel.removeAll();
+        GetAllProductsGUI.productsTable(panel);
 
         JLabel productId = new JLabel("Product ID ");
         productId.setBounds(10, 20, 120, 30);
-        panel.add(productId);
+        parentPanel.add(productId);
 
         productIDText= new JTextField(25);
         productIDText.setBounds(120, 20, 165, 25);
-        panel.add(productIDText);
+        parentPanel.add(productIDText);
 
         productIDStatus = new JLabel("");
         productIDStatus.setBounds(10, 50, 500, 30);
         productIDStatus.setForeground(Color.red);
-        panel.add(productIDStatus);
+        parentPanel.add(productIDStatus);
 
-        JLabel price = new JLabel("Price ");
+        JLabel price = new JLabel("Price (Rs.) ");
         price.setBounds(10, 80, 120, 30);
-        panel.add(price);
+        parentPanel.add(price);
 
         priceText = new JTextField(25);
         priceText.setBounds(120, 80, 165, 25);
-        panel.add(priceText);
+        parentPanel.add(priceText);
 
         priceStatus = new JLabel("");
         priceStatus.setBounds(10, 110, 500, 30);
         priceStatus.setForeground(Color.red);
-        panel.add(priceStatus);
+        parentPanel.add(priceStatus);
 
         JButton button = new JButton(" Confirm ");
         button.setBounds(10, 140, 165, 25);
-        button.addActionListener(e -> updateStock());
-        panel.add(button);
+        button.addActionListener(e -> {
+            updateStock();
+
+            panel.removeAll();
+            panel.revalidate();
+            panel.repaint();
+            GetAllProductsGUI.productsTable(panel);
+        });
+        parentPanel.add(button);
 
 
     }
@@ -78,8 +92,8 @@ public class UpdateProductPriceGUI extends JDialog {
                 productIDStatus.setText("");
 
                 if (product != null){
-                    product.setStock(price);
-                    pdao.updateProductStock(prodID, product);
+                    product.setPrice(price);
+                    pdao.updateProductPrice(prodID, product);
                     JOptionPane.showMessageDialog(this, " Price Updated Successfully ! ");
                     dispose();
                 } else {

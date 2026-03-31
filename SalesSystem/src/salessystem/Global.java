@@ -2,10 +2,14 @@ package salessystem;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.List;
 
-public class GlobalMethods {
+public class Global {
+
+    public static final String companyName = "Company name";
+    public static final String rootUser = "rootuser2295";
+    public static final String rootPassword = "RootUser2295!@#";
+
 
     public static String dateTimeFormat(LocalDateTime date ){
 
@@ -35,6 +39,5 @@ public class GlobalMethods {
         }
         return sb.toString();
     }
-
 
 }

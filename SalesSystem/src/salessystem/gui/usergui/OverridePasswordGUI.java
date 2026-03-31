@@ -15,7 +15,7 @@ public class OverridePasswordGUI extends JDialog {
     private JTextField textfield;
 
     public OverridePasswordGUI(JFrame parent){
-        super(parent, "Login", true);
+        super(parent, "Override Password", true);
 
         setSize(500, 300);
         setLocationRelativeTo(parent);

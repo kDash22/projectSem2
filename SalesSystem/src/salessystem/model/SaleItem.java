@@ -1,11 +1,12 @@
 package salessystem.model;
 
+//represents a line in a bill or sale, a certain configuration of a product's quantity with its own subtotal
 public class SaleItem {
 
     private int saleItemID;
-    private  Product product;
-    private double quantity;
-    private double subtotal;
+    private final Product product; //these variables don't change after being set
+    private final double quantity;
+    private final double subtotal;
 
     //setters
     public void setSaleItemID(int saleItemID){
@@ -37,6 +38,7 @@ public class SaleItem {
 
     @Override
     public String toString(){
+
         String msg = "\nSale Item ID : "+ getSaleItemID();
         msg += "\n" + getProduct() + "\n";
 
@@ -69,8 +71,9 @@ public class SaleItem {
         this.subtotal = subtotal;
     }
 
+
     public void validateQuantity(Product product,double quantity){
-        if (product.getUnitType() == UnitType.PIECE && quantity %1 != 0){
+        if (product.getUnitType() == UnitType.PIECE && quantity %1 != 0){ //quantity must be a whole number for piece type products
             throw new IllegalArgumentException(" Quantity must be a whole number for PIECE type products");
         }
         if (quantity > product.getStock()){

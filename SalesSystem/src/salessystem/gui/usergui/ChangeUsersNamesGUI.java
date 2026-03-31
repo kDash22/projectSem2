@@ -10,76 +10,93 @@ public class ChangeUsersNamesGUI extends JDialog {
 
     private final JTextField firstNameText;
     private final JTextField lastNameText;
-    private final JTextField usernameText;
+    private final JTextField userIDText;
     private final JLabel nameStatus;
-    private final JLabel UserNameStatus;
+    private final JLabel UserIDStatus;
 
     public ChangeUsersNamesGUI(JFrame parent){
-        super(parent, "Add New User", true);
+        super(parent, "Change User's name", true);
 
-        setSize(600, 300);
+        setSize(800, 400);
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
+        JPanel parentPanel = new JPanel();
+        parentPanel.setLayout(null);
+        add(parentPanel);
+
         JPanel panel = new JPanel();
-        panel.setLayout(null);
-        add(panel);
+        panel.setBounds(260, 20, 550,250);
+        parentPanel.add(panel);
 
-        JLabel username = new JLabel("Username ");
-        username.setBounds(10, 20, 80, 30);
-        panel.add(username);
+        panel.removeAll();
+        GetAllUserGUI.UserTable(panel);
 
-        usernameText = new JTextField(25);
-        usernameText.setBounds(100, 20, 165, 25);
-        panel.add(usernameText);
 
-        UserNameStatus = new JLabel("");
-        UserNameStatus.setBounds(10, 50, 500, 30);
-        UserNameStatus.setForeground(Color.red);
-        panel.add(UserNameStatus);
+        JLabel userId = new JLabel("User ID ");
+        userId.setBounds(10, 20, 80, 30);
+        parentPanel.add(userId);
+
+        userIDText = new JTextField(25);
+        userIDText.setBounds(100, 20, 165, 25);
+        parentPanel.add(userIDText);
+
+        UserIDStatus = new JLabel("");
+        UserIDStatus.setBounds(10, 50, 500, 30);
+        UserIDStatus.setForeground(Color.red);
+        parentPanel.add(UserIDStatus);
 
         JLabel firstName = new JLabel("First Name ");
         firstName.setBounds(10, 80, 80, 30);
-        panel.add(firstName);
+        parentPanel.add(firstName);
 
         firstNameText = new JTextField(25);
         firstNameText.setBounds(100, 80, 165, 25);
-        panel.add(firstNameText);
+        parentPanel.add(firstNameText);
 
         JLabel lastName = new JLabel("Last Name ");
         lastName.setBounds(10, 110, 80, 30);
-        panel.add(lastName);
+        parentPanel.add(lastName);
 
         lastNameText = new JTextField(25);
         lastNameText.setBounds(100, 110, 165, 25);
-        panel.add(lastNameText);
+        parentPanel.add(lastNameText);
 
         nameStatus = new JLabel("");
         nameStatus.setBounds(10, 140, 500, 30);
         nameStatus.setForeground(Color.red);
-        panel.add(nameStatus);
+        parentPanel.add(nameStatus);
 
         JButton button = new JButton(" Confirm ");
         button.setBounds(10, 175, 165, 25);
-        button.addActionListener(e -> changeUsersNames());
-        panel.add(button);
+        button.addActionListener(e -> {
+            changeUsersNames();
+            panel.removeAll();
+            panel.revalidate();
+            panel.repaint();
+            GetAllUserGUI.UserTable(panel);
+
+        });
+        parentPanel.add(button);
     }
 
     public void changeUsersNames(){
-            String username = usernameText.getText();
+            String userIDString = userIDText.getText();
             String firstName = firstNameText.getText();
             String lastName = lastNameText.getText();
 
+
             boolean nameCheck = false;
-            boolean usernameCheck = false;
+            boolean userIDcheck = false;
+            int userID = -1;
 
-        if (username != null && !username.isBlank()) {
+        if (userIDString != null && !userIDString.isBlank()) {
 
-            username = username.trim();
-            UserNameStatus.setText("");
-            usernameCheck = true;
+            userID = Integer.parseInt(userIDString);
+            UserIDStatus.setText("");
+            userIDcheck = true;
         } else {
-            UserNameStatus.setText(" Username cannot be blank ! ");
+            UserIDStatus.setText(" User ID cannot be blank ! ");
         }
 
         if (firstName != null && !firstName.isBlank()
@@ -99,9 +116,9 @@ public class ChangeUsersNamesGUI extends JDialog {
 
         }
 
-        if (usernameCheck && nameCheck){
+        if (userIDcheck && nameCheck){
             UserDAO udao = new UserDAO();
-            User user = udao.getUserByUsername(username);
+            User user = udao.getUserByUserID(userID);
 
 
             if (user != null){
@@ -110,10 +127,10 @@ public class ChangeUsersNamesGUI extends JDialog {
 
                 udao.updateName(user.getUserID(), user);
                 JOptionPane.showMessageDialog(this, " Name changed Successfully ! ");
-                dispose();
+
             }else {
                 JOptionPane.showMessageDialog(this, " User not found ");
-                usernameText.setText("");
+                userIDText.setText("");
                 firstNameText.setText("");
                 lastNameText.setText("");
             }
