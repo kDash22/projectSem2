@@ -25,7 +25,8 @@ public class AddSaleGUI extends JDialog {
     private JTextField customerIDField;//input field for customer id
     private List<SaleItem> saleItems = new ArrayList<>();//sale items list
     private JLabel cusid;//used to display the valid customer id
-
+    private JLabel totalAmount;
+    private double total;
 
     //initialise the JDialog
     //includes
@@ -89,6 +90,18 @@ public class AddSaleGUI extends JDialog {
         status.setForeground(Color.red);
         add(status);
 
+        JLabel totalLabel = new JLabel("Total");
+        totalLabel.setBounds(300, 100, 80, 25);
+        totalLabel.setForeground(Color.BLUE);
+        add(totalLabel);
+
+        totalAmount = new JLabel("");
+        totalAmount.setBounds(370, 100, 150, 25);
+        totalAmount.setForeground(Color.BLUE);
+        add(totalAmount);
+
+
+
         //handles adding sale items to the sale
         addItemBtn.addActionListener(e -> addItem());
 
@@ -134,6 +147,9 @@ public class AddSaleGUI extends JDialog {
                         status.setText("");
                         SaleItem item = new SaleItem(product, quantity);
                         saleItems.add(item);
+
+                        total = total+item.getSubtotal();
+                        totalAmount.setText("Rs. "+total);
 
                         model.addRow(new Object[]{
                                 productID,

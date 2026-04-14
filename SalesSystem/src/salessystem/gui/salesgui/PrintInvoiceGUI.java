@@ -67,6 +67,7 @@ public class PrintInvoiceGUI extends JDialog {
         DefaultTableCellRenderer rightAlign = new DefaultTableCellRenderer();
         rightAlign.setHorizontalAlignment(SwingConstants.RIGHT);
 
+
         //setting money columns to the right
         table.getColumnModel().getColumn(2).setCellRenderer(rightAlign);
         table.getColumnModel().getColumn(3).setCellRenderer(rightAlign);

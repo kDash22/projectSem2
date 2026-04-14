@@ -52,6 +52,7 @@ public class LoginGUI extends JDialog {
         JButton button = new JButton("Login");
         button.setBounds(10,110,80,25);
 
+
         //handles login
         button.addActionListener(e-> {
             verifyLogin();
@@ -95,7 +96,8 @@ public class LoginGUI extends JDialog {
 
                 JOptionPane.showMessageDialog(this, " Login Successful ! ");
                 authentication = true;
-                loggedUser = user;dispose();
+                loggedUser = user;
+                dispose();
 
             } else {
                 passwordField.setText("");
